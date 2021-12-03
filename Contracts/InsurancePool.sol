@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.7;
 
 import "./PoolMember.sol";
 
@@ -121,21 +121,21 @@ contract InsurancePool is PoolMember{
 
     /* implementing PoolMember Interface Functions: */
 
-    function getMemberBalance(address _memberAddress) public view override returns (uint)  
+    function getMemberBalance(address _memberAddress) public view override returns (uint)  //
     {
          int poolMemberId = getMemberIndex(_memberAddress);
          require (poolMemberId >= 0,"It is not a pool member");
          return members[uint(poolMemberId)].balance;
     }
 
-    function getMemberTotalClaims(address _memberAddress) public view override returns (uint)  
+    function getMemberTotalClaims(address _memberAddress) public view override returns (uint)  // 
     {
         int poolMemberId = getMemberIndex(_memberAddress);
         require (poolMemberId >= 0,"It is not a pool member");
         return members[uint(poolMemberId)].totalClaims;
     }
 
-    function getMemberRemainingCoverage(address _memberAddress) public view override returns (uint)
+    function getMemberRemainingCoverage(address _memberAddress) public view override returns (uint) //
     {
         int poolMemberId = getMemberIndex(_memberAddress);
         require (poolMemberId >= 0,"It is not a pool member");
@@ -200,14 +200,14 @@ contract InsurancePool is PoolMember{
         int poolMemberId = getMemberIndex (_memberAddress);
         require (poolMemberId > 0, "Not a pool member or he is the pool manager");
         uint uintPoolMemberId = uint(poolMemberId);
-        address _address = members[uintPoolMemberId].memberAddress;
+        address payable _address = members[uintPoolMemberId].memberAddress;
 
         //Now he is no longer a pool member (effects)
         members[uintPoolMemberId] = members[members.length - 1];
         members.pop();
 
         //we need to transfer back its premium (interactions) 
-        payable(_address).transfer(premium);
+        _address.transfer(premium);
         return true;
     }
 
