@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.7;
+pragma solidity 0.8.10;
 
 import "./InsurancePool.sol";
 
@@ -12,7 +12,7 @@ import "./InsurancePool.sol";
 
 contract P2P_Insurance {
     
-    address immutable owner; //owner = platform
+    address public immutable owner; //owner = platform
     mapping(address => InsurancePool) public pools; // The pool address is the bridge between frontend and backend
     
     modifier onlyOwner(){
@@ -57,15 +57,15 @@ contract P2P_Insurance {
     // each pool has a unique contract address as an escrew account for that specific pool.
     // payment unit in Wei
     //returns the pool address for the frontend
-    function createNewPool(uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) public payable enoughPremiumPaid(_premium, msg.value) returns (address _poolAddress)
+    function createNewPool(uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) public payable enoughPremiumPaid(_premium, msg.value) returns (InsurancePool _poolInstance)
     {
         uint _value = msg.value;
         // create a new pool instance
-        InsurancePool pool = new InsurancePool();
-        _poolAddress = address(pool);
+        _poolInstance = new InsurancePool();
+        //_poolAddress = address(pool);
         // create a new pool and transfer the premim to the pool contract
-        pool.createPool {value: _value}(msg.sender,_minNumberOfMembers,_premium,_maxCoveragePerMember);
-        pools[_poolAddress] = pool;
+        _poolInstance.createPool {value: _value}(msg.sender,_minNumberOfMembers,_premium,_maxCoveragePerMember);
+        pools[address(_poolInstance)] = _poolInstance;
     } 
 
     // User can join an address and pay the premium, as a result he becomes a pool member

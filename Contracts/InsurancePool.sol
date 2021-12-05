@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.7;
+pragma solidity 0.8.10;
 
 import "./PoolMember.sol";
 
@@ -88,6 +88,11 @@ contract InsurancePool is PoolMember{
     function getPoolTotalBalance() public view returns (uint)
     {
         return address (this).balance; 
+    }
+
+    function getPoolAddress() public view returns (address)
+    {
+        return address (this); 
     }
 
     //return the available balance in pool after deducting the members balances that are due and not withdrawed yet. 
