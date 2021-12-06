@@ -32,8 +32,9 @@ contract P2P_Insurance {
     }
 
     //Register Events
-    event fallbackReceived(address sender, string message);
+    event poolCanceled (address indexed _memberAddress, string _message);
 
+    event fallbackReceived(address sender, string message);
 
     constructor () 
     {
@@ -77,7 +78,10 @@ contract P2P_Insurance {
     //The pool manager can cancel a pool if it is still in the initiated status - as example, for long time the pool not reaches the minimum requirements to be activated
     function cancelPool (address _poolAddress) public
     {
-        pools[_poolAddress].cancelPool(msg.sender);
+        address _memberAddress = msg.sender;
+        pools[_poolAddress].cancelPool(_memberAddress);
+        emit poolCanceled (_memberAddress, "The pool is sucessfully canceled!");
+
     }
 
     // the pool is finshed once the policy expired after one year since activation (UI/Frontend validation)
@@ -117,7 +121,7 @@ contract P2P_Insurance {
     }
 
     //fall back function 
-    //it is not payable - not accepting to receive plain ether and this will raise an exception !    
+    //it is not payable - not accepting to receive plain ether and this will raise an exception!    
     fallback() external  {
         emit fallbackReceived(msg.sender,"P2P_Insurance Fallback was called");
     }

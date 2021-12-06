@@ -80,9 +80,7 @@ contract InsurancePool is PoolMember{
     }
 
     //Register Events
-    event poolCanceled (address indexed _memberAddress, string _message);
     event fallbackReceived(address sender, string message);
-
 
     //return the current fund at the pool
     function getPoolTotalBalance() public view returns (uint)
@@ -192,8 +190,6 @@ contract InsurancePool is PoolMember{
             members[i].balance += premium;
             //members[i].memberAddress.transfer(premium);
         }
-
-        emit poolCanceled (_memberAddress, "The pool is sucessfully canceled");
     }
 
     // cancel membership of a pool member befor the pool activation
@@ -294,7 +290,7 @@ contract InsurancePool is PoolMember{
     }
 
     //fall back function 
-    //it is not payable - not accepting to receive plain ether and this will raise exception !
+    //it is not payable - not accepting to receive plain ether and this will raise exception!
     fallback() external  {
         emit fallbackReceived(msg.sender,"P2P_Insurance Fallback was called");
     }

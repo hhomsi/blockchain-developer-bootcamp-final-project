@@ -1,10 +1,4 @@
 /*
- * uncomment accounts to access the test accounts made available by the
- * Ethereum client
- * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
- */
-
-/*
 
 This test file has been updated for Truffle version 5.0. If your tests are failing, make sure that you are
 using Truffle version 5.0. You can check this by running "trufffle version"  in the terminal. If version 5 is not
@@ -14,24 +8,12 @@ with `npm install -g truffle`.
 */
 
 const P2P_Insurance = artifacts.require("./P2P_Insurance.sol");
-
 const InsurancePool = artifacts.require("./InsurancePool.sol");
 
-
 contract("P2P_Insurance", function ( accounts ) {
-  
-  /*it("should assert true", async function () {
-    await P2P_Insurance.deployed();
-    return assert.isTrue(true);
-  });*/
-
-  /*it("Testing Owner", async() => {
-    const ppOwner = await ppInstance.owner.call();
-    assert.equal(ppOwner, accounts[0], "Pool is not created.");
-  });*/
 
   const [poolManager, member1, member2] = accounts;
-  const pool = [3, web3.utils.toWei("0.0015"), web3.utils.toWei("0.0045")]; // number of members, premium, max coverage per member
+  const pool = [3, web3.utils.toWei("0.0015"), web3.utils.toWei("0.0030")]; // number of members, premium, max coverage per member
 
   const getErrorObj = (obj = {}) => {
     const txHash = Object.keys(obj)[0];
@@ -43,7 +25,7 @@ contract("P2P_Insurance", function ( accounts ) {
   });
 
   describe ("Pool Creation" , () => {
-    it("Pool should be created", async() => {
+    it("New pool should be created", async() => {
       await p2pInstance.createNewPool.call (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
       assert.isTrue(true);
     });
@@ -66,12 +48,12 @@ contract("P2P_Insurance", function ( accounts ) {
   });
 
   describe ("Joining a Pool" , () => {
-    it("Member1 should be joined the pool successfully", async() => {
+    it("Member1 " + member1 +  " should be joined the pool successfully", async() => {
       await poolInstance.joinPool (member1,{value: pool[1] });
       assert.isTrue(true);
     });
 
-    it("Member2 should be joined the pool successfully", async() => {
+    it("Member2 " + member2 +  " should be joined the pool successfully", async() => {
       await poolInstance.joinPool (member2,{ value: pool[1] });
       assert.isTrue(true);
     });
@@ -79,6 +61,56 @@ contract("P2P_Insurance", function ( accounts ) {
     it("Pool should be now activated", async() => {
       const status = await poolInstance.status.call();
       assert.equal(status , 1, "Pool should be activated");
+    });
+
+    describe ("Requesting a Claim" , () => {
+      it("A claim should not be processed! : " + member1 + " exceeded his maximum coverage", async() => {
+        const claimAmount = web3.utils.toWei("0.0031");
+        try {
+            await poolInstance.requestClaim (member1, claimAmount); 
+        } catch (e) {
+            const {error, reason} = getErrorObj(e.data);
+            assert.equal(error, "revert");
+            assert.equal (reason, "The claim can't be processed because the member has exceeded its maximum coverage");
+        }
+      });
+
+      it("A claim should be processed successfully", async() => {
+        const claimAmount = web3.utils.toWei("0.002");
+        await poolInstance.requestClaim (member1,claimAmount);
+        assert.isTrue(true);
+      });
+
+      describe ("Finish a Pool / Policy Expiry" , () => {
+        it("The pool should not be finished! : " + member1 + " is not the pool manager", async() => {
+          try {
+              await poolInstance.finishPool (member1); 
+          } catch (e) {
+              const {error, reason} = getErrorObj(e.data);
+              assert.equal(error, "revert");
+              assert.equal (reason, "It is not the pool manager");
+          }
+        });
+
+        it("The pool should be finished successfully", async() => {
+          const availableBalanceBefore = await poolInstance.getPoolAvailableBalance.call();
+          await poolInstance.finishPool (poolManager);
+          const availableBalanceAfter = await poolInstance.getPoolAvailableBalance.call();
+          assert.notEqual(availableBalanceBefore.toNumber() , availableBalanceAfter.toNumber() , "The surplus should be distributed before finishing the pool!");
+        });
+
+        describe ("Distribute surplus to the members" , () => {
+          it("Member " + member1 + " should withdraw the available balance successfully", async() => {
+            const memberBalanceBefore = await poolInstance.getMemberBalance.call(member1);
+            await poolInstance.withdrawBalance (member1);
+            const memberBalanceAfter= await poolInstance.getMemberBalance.call(member1);
+            assert.notEqual(memberBalanceBefore.toNumber(), memberBalanceAfter.toNumber() , "The withdrawal has failed!");
+          });
+
+        });
+
+      });
+
     });
 
   });
