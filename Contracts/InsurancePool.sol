@@ -120,7 +120,7 @@ contract InsurancePool is PoolMember{
         policyStartDate = block.timestamp;
     }
     
-    constructor () {}
+    constructor ()  {}
 
     /* implementing PoolMember Interface Functions: */
 
@@ -146,7 +146,7 @@ contract InsurancePool is PoolMember{
     }
 
     //already checked if enough premium paid before creating the InsurancePool instance
-    function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable override
+    function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable override returns (bool)
     {
         minNumberOfMembers = _minNumberOfMembers;  // 
         premium = _premium; // _premium in Wei
@@ -161,10 +161,11 @@ contract InsurancePool is PoolMember{
         //members.push(Member(_memberAddress , msg.value - _premium, 0)); // Adding the pool manager
 
         status = PoolStatus.Initiated;
+        return true;
     }
 
     //already checked if enough premium paid before calling the function
-    function joinPool(address _memberAddress) external payable override 
+    function joinPool(address _memberAddress) external payable override returns (bool isJoined,bool isPoolActivated)
     {
         require (getMemberIndex(_memberAddress) == -1,"Member already joined this pool");
 
@@ -175,14 +176,16 @@ contract InsurancePool is PoolMember{
         member.balance = msg.value - premium; // to refund extra amount than the premium
         members.push(member);
         //members.push(Member(_memberAddress , msg.value - premium, 0));
+        isJoined = true;
 
         if (members.length == minNumberOfMembers) {
             activatePool();
+            isPoolActivated = true;
         }
     }
 
     //The pool manager can cancel a pool if it is still in the initiated status - as example, long time the pool not reaches the minimum requirements to be activated
-    function cancelPool (address _memberAddress) external override onlyPoolManager(_memberAddress) onlyInitiatedPool
+    function cancelPool (address _memberAddress) external override onlyPoolManager(_memberAddress) onlyInitiatedPool returns (bool)
     {
         status = PoolStatus.Canceled;
         //return already paid premiums to members
@@ -190,6 +193,7 @@ contract InsurancePool is PoolMember{
             members[i].balance += premium;
             //members[i].memberAddress.transfer(premium);
         }
+        return true;
     }
 
     // cancel membership of a pool member befor the pool activation
@@ -226,7 +230,6 @@ contract InsurancePool is PoolMember{
                 //members[i].memberAddress.transfer(memberShareInSurplus);
             }
         }
-        //emit events
         return true;
     }
 
@@ -253,7 +256,7 @@ contract InsurancePool is PoolMember{
     } 
 
     // this function will refund the member any extra amount (when deposit the premium), cancelation cases or when distributing the surplus at policy expiry
-    function withdrawBalance(address _memberAddress) external override noReentrancy //
+    function withdrawBalance(address _memberAddress) external override noReentrancy returns (bool)//
     {
         //Checks-effects-interactions pattern
 
@@ -275,6 +278,8 @@ contract InsurancePool is PoolMember{
 
         if (status == PoolStatus.Canceled && getPoolTotalBalance() == 0)
             selfDestructPool();
+
+        return true;
     } 
     
     /* implementing PoolMember Interface Functions has been Completed */

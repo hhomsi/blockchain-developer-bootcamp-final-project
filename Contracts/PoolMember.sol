@@ -15,11 +15,11 @@ interface PoolMember {
     function getMemberRemainingCoverage(address _memberAddress) external view returns (uint);
 
 
-    function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable;
-    function joinPool(address _memberAddress) external payable;
-    function cancelPool(address _memberAddress) external;
+    function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable returns (bool);
+    function joinPool(address _memberAddress) external payable returns (bool,bool);
+    function cancelPool(address _memberAddress) external returns (bool); 
     function cancelSubscription(address _memberAddress) external returns (bool);
     function finishPool(address _memberAddress) external returns (bool);
     function requestClaim(address _memberAddress, uint _claimAmount) external returns (bool);
-    function withdrawBalance(address _memberAddress) external;
+    function withdrawBalance(address _memberAddress) external returns (bool);
 }

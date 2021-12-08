@@ -13,7 +13,7 @@ const InsurancePool = artifacts.require("./InsurancePool.sol");
 contract("P2P_Insurance", function ( accounts ) {
 
   const [poolManager, member1, member2] = accounts;
-  const pool = [3, web3.utils.toWei("0.0015"), web3.utils.toWei("0.0030")]; // number of members, premium, max coverage per member
+  const pool = [3, web3.utils.toWei("0.0015" , 'ether'), web3.utils.toWei("0.0030" , 'ether')]; // number of members, premium, max coverage per member
 
   const getErrorObj = (obj = {}) => {
     const txHash = Object.keys(obj)[0];
@@ -26,7 +26,15 @@ contract("P2P_Insurance", function ( accounts ) {
 
   describe ("Pool Creation" , () => {
     it("New pool should be created", async() => {
-      await p2pInstance.createNewPool.call (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
+      await p2pInstance.createNewPool (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
+      const poolCount = await p2pInstance.getPoolCount.call()
+      const pools = await p2pInstance.getPools.call();
+      const newPool = await pools.at(poolCount - 1 );
+      let poolInstance = await InsurancePool.at(newPool);
+      const premium = await poolInstance.premium.call();
+      console.log(web3.utils.toNumber(premium));
+      //const pools = await p2pInstance.getPoolCount.call();
+      //console.log(web3.utils.toNumber(pools));
       assert.isTrue(true);
     });
 

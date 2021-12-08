@@ -13,7 +13,19 @@ import "./InsurancePool.sol";
 contract P2P_Insurance {
     
     address public immutable owner; //owner = platform
-    mapping(address => InsurancePool) public pools; // The pool address is the bridge between frontend and backend
+    uint public poolCount =0;
+    InsurancePool[] pools;
+    //mapping(address => InsurancePool) public pools; // The pool address is the bridge between frontend and backend
+
+    function getPools() public view returns (InsurancePool[] memory)
+    {
+        return pools;
+    }
+
+    function getPoolCount() public view returns (uint)
+    {
+        return poolCount;
+    }
     
     modifier onlyOwner(){
         require (msg.sender == owner,"It is not the contract owner");
@@ -25,14 +37,21 @@ contract P2P_Insurance {
         _;
     }
 
-    modifier notFinishedOrCanceledPool (address _poolAddress) {
-        require (pools[_poolAddress].status() == InsurancePool.PoolStatus.Initiated || pools[_poolAddress].status() == InsurancePool.PoolStatus.Active,
+    modifier notFinishedOrCanceledPool (uint _poolId) {
+        require (pools[_poolId].status() == InsurancePool.PoolStatus.Initiated || pools[_poolId].status() == InsurancePool.PoolStatus.Active,
         "The pool status is either finished or canceled");
         _;
     }
 
     //Register Events
+    event poolCreated (address indexed _memberAddress, string _message);
+    event memberJoined (address indexed _memberAddress, string _message);
+    event poolActivated (uint indexed _poolId, string _message);
+    event poolFinished (address indexed _memberAddress, string _message);
     event poolCanceled (address indexed _memberAddress, string _message);
+    event memberUnsubscibed (address indexed _memberAddress, string _message);
+    event claimRequested (address indexed _memberAddress, string _message);
+    event balanceWithdrawed (address indexed _memberAddress, string _message);
 
     event fallbackReceived(address sender, string message);
 
@@ -41,62 +60,73 @@ contract P2P_Insurance {
         owner = msg.sender;
     }
 
-    function getMemberBalance(address poolAddress, address _memberAddress) public view returns (uint)
+    function getMemberBalance(uint _poolId, address _memberAddress) public view returns (uint)
     {
-        return pools[poolAddress].getMemberBalance(_memberAddress); 
+        return pools[_poolId].getMemberBalance(_memberAddress); 
     }
-    function getMemberTotalClaims(address poolAddress, address _memberAddress) public view returns(uint) 
+    function getMemberTotalClaims(uint _poolId, address _memberAddress) public view returns(uint) 
     {
-        return pools[poolAddress].getMemberTotalClaims(_memberAddress);
+        return pools[_poolId].getMemberTotalClaims(_memberAddress);
     }
-    function getMemberRemainingCoverage(address poolAddress, address _memberAddress) public view returns (uint)
+    function getMemberRemainingCoverage(uint _poolId, address _memberAddress) public view returns (uint)
     {
-        return pools[poolAddress].getMemberRemainingCoverage(_memberAddress);
+        return pools[_poolId].getMemberRemainingCoverage(_memberAddress);
     }
 
     //Anyone can create a new pool that is open for other members to join'.
     // each pool has a unique contract address as an escrew account for that specific pool.
     // payment unit in Wei
     //returns the pool address for the frontend
-    function createNewPool(uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) public payable enoughPremiumPaid(_premium, msg.value) returns (InsurancePool _poolInstance)
+    function createNewPool(uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) public payable enoughPremiumPaid(_premium, msg.value) returns (bool isCreated, address _poolAddress)
     {
         uint _value = msg.value;
+        address _memberAddress = msg.sender;
+
         // create a new pool instance
-        _poolInstance = new InsurancePool();
-        //_poolAddress = address(pool);
+        InsurancePool pool = new InsurancePool();
+        _poolAddress = address(pool);
         // create a new pool and transfer the premim to the pool contract
-        _poolInstance.createPool {value: _value}(msg.sender,_minNumberOfMembers,_premium,_maxCoveragePerMember);
-        pools[address(_poolInstance)] = _poolInstance;
+        isCreated = pool.createPool {value: _value}(_memberAddress,_minNumberOfMembers,_premium,_maxCoveragePerMember);
+        pools.push(pool);
+        poolCount ++;
+        emit poolCreated (_memberAddress, "The pool is sucessfully created!");
     } 
 
     // User can join an address and pay the premium, as a result he becomes a pool member
-    function joinPool(address _poolAddress) public payable notFinishedOrCanceledPool(_poolAddress) enoughPremiumPaid(pools[_poolAddress].premium(), msg.value)
+    function joinPool(uint _poolId) public payable notFinishedOrCanceledPool(_poolId) enoughPremiumPaid(pools[_poolId].premium(), msg.value) returns (bool isJoined, bool isPoolActivated)
     {
-        pools[_poolAddress].joinPool{value: msg.value}(msg.sender);
+        address _memberAddress = msg.sender;
+        (isJoined , isPoolActivated)  = pools[_poolId].joinPool{value: msg.value}(_memberAddress);
+        emit memberJoined (_memberAddress, "The member has joined the pool sucessfully!");
+        if (isPoolActivated)
+            emit poolActivated (_poolId, "The pool is sucessfully activated!");
     }
 
     //The pool manager can cancel a pool if it is still in the initiated status - as example, for long time the pool not reaches the minimum requirements to be activated
-    function cancelPool (address _poolAddress) public
+    function cancelPool (uint _poolId) public returns (bool isCanceled)
     {
         address _memberAddress = msg.sender;
-        pools[_poolAddress].cancelPool(_memberAddress);
+        isCanceled = pools[_poolId].cancelPool(_memberAddress);
         emit poolCanceled (_memberAddress, "The pool is sucessfully canceled!");
-
     }
 
     // the pool is finshed once the policy expired after one year since activation (UI/Frontend validation)
     // Only the pool manager has the right to call this function
-    function finshPool (address _poolAddress) public returns (bool)
+    function finshPool (uint _poolId) public returns (bool isFinished)
     {
-        return pools[_poolAddress].finishPool(msg.sender);
+        address _memberAddress = msg.sender;
+        isFinished = pools[_poolId].finishPool(_memberAddress);
+        emit poolFinished (_memberAddress, "The pool is sucessfully finished!");
         //do we need to empty the pool? I think No, because we need to have the pool history onchain for transparency
         //In future, we can offer to renew the pool once policy is expired
     }
 
     // member can cancel his subscription in a specific pool as long as the pool is not activated. The pool will refund the premium to his balance
-    function cancelMembershipBeforPoolActivation (address _poolAddress) public returns (bool)
+    function cancelMembershipBeforPoolActivation (uint _poolId) public returns (bool isCanceled)
     {
-        return pools[_poolAddress].cancelSubscription(msg.sender);
+        address _memberAddress = msg.sender;
+        isCanceled = pools[_poolId].cancelSubscription(_memberAddress);
+        emit memberUnsubscibed (_memberAddress, "The member has unsubscibed from the pool sucessfully!");
     }
 
     /* There should be an eligibility process in place to validate the claims' reqests, 
@@ -109,15 +139,19 @@ contract P2P_Insurance {
 
         At this project (POC), we consider the claim request is eligible and approved by majority of pool members
     */ 
-    function requestClaim(address _poolAddress, uint _claimAmount) public returns (bool)
+    function requestClaim(uint _poolId, uint _claimAmount) public returns (bool isClaimed)
     {
-        return pools[_poolAddress].requestClaim(msg.sender, _claimAmount); 
+        address _memberAddress = msg.sender;
+        isClaimed =  pools[_poolId].requestClaim(_memberAddress, _claimAmount); 
+        emit claimRequested (_memberAddress, "The request claim has processed sucessfully!");
     } 
 
     // member can withdraw his avialable balance (in case of cancelation, refund , etc.)
-    function withdrawBalance(address _poolAddress) public //
+    function withdrawBalance(uint _poolId) public returns (bool isWithdrawed)//
     {
-        pools[_poolAddress].withdrawBalance(msg.sender);
+        address _memberAddress = msg.sender;
+        isWithdrawed = pools[_poolId].withdrawBalance(_memberAddress);
+        emit balanceWithdrawed (_memberAddress, "The balance withdrawal has processed sucessfully!");
     }
 
     //fall back function 
