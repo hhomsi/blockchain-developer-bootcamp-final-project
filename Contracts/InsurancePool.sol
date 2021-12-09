@@ -104,7 +104,7 @@ contract InsurancePool is PoolMember{
 
     function getMembersCount() public view returns (uint)  
     {
-        return members.length - 1;
+        return members.length;
     }
 
     function getMemberIndex(address _memberAddress) private view returns (int poolMemberId)  

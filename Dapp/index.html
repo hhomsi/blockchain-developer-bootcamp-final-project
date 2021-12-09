@@ -58,6 +58,13 @@
         <tr>
             <td><b>Pool Id</b></td>
             <td><b>Pool Address</b></td>
+            <td><b>Min Number of Members</b></td>
+            <td><b>Premium</b></td>
+            <td><b>max Coverage/Memeber</b></td>
+            <td><b>Status</b></td>
+            <td><b>Policy Start Date</b></td>
+            <td><b>Pool Available Fund</b></td>
+            <td><b>Current Members Count</b></td>
         </tr>
     </table>
     &nbsp;<br/>
@@ -76,15 +83,17 @@
     <table id="memberPools"  border="1" cellpadding="2">
         <tr>
             <td><b>Pool Id</b></td>
+            <td><b>Available Balance</b></td>
             <td><b>Total Claims</b></td>
             <td><b>Remaining Coverage</b></td>
-            <td><b>Available Balance</b></td>
+            <td><b>Is Pool Manager</b></td>
         </tr>
     </table>
     &nbsp;<br/>
   </div>
 
   <div>
+    <input  id="otherFunctions-pool-id" type="number" placeholder="Pool ID"/> 
     <button id="withdraw-balance">Withdraw Balance</button>
     <button id="cancel-membership">Cancel Membership</button>
     <button id="cancel-pool">Cancel a Pool</button>

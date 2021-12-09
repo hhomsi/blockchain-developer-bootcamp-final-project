@@ -1,466 +1,434 @@
 // contract address on Rinkeby:
-const ppAddress = '0x98605f70B4b5843d51a2160f1A29A964C5892f76'
+const ppAddress = '0x44a170Ba86bf31bC6746775A5337410a589C4A08'
 
 // add contract ABI from Remix:
 const ppABI = [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "balanceWithdrawed",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "claimRequested",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "message",
-          "type": "string"
-        }
-      ],
-      "name": "fallbackReceived",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "memberJoined",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "memberUnsubscibed",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "poolActivated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "poolCanceled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "poolCreated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_message",
-          "type": "string"
-        }
-      ],
-      "name": "poolFinished",
-      "type": "event"
-    },
-    {
-      "stateMutability": "nonpayable",
-      "type": "fallback"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "poolCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "getPools",
-      "outputs": [
-        {
-          "internalType": "contract InsurancePool[]",
-          "name": "",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberTotalClaims",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberRemainingCoverage",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_minNumberOfMembers",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_premium",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_maxCoveragePerMember",
-          "type": "uint256"
-        }
-      ],
-      "name": "createNewPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isCreated",
-          "type": "bool"
-        },
-        {
-          "internalType": "address",
-          "name": "_poolAddress",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function",
-      "payable": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "joinPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isJoined",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "isPoolActivated",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function",
-      "payable": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "cancelPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isCanceled",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "finshPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isFinished",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "cancelMembershipBeforPoolActivation",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isCanceled",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_claimAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "requestClaim",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isClaimed",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawBalance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isWithdrawed",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "balanceWithdrawed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "claimRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      }
+    ],
+    "name": "fallbackReceived",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "memberJoined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "memberUnsubscibed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "poolActivated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "poolCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "poolCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "poolFinished",
+    "type": "event"
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "fallback"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "poolCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "getPools",
+    "outputs": [
+      {
+        "internalType": "contract InsurancePool[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPoolDetails",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_poolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minMembers",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_premium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxCoverage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_status",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_poolFund",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_memberCount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_memberAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getMemberDetails",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "_poolMemberId",
+        "type": "int256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_balance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalClaims",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_remainingCoverage",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_minNumberOfMembers",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_premium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxCoveragePerMember",
+        "type": "uint256"
+      }
+    ],
+    "name": "createNewPool",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "joinPool",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "finshPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelMembershipBeforPoolActivation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_claimAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "requestClaim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawBalance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
 
 // Using the 'load' event listener for Javascript to
 // check if window.ethereum is available
@@ -533,26 +501,28 @@ ppCreatePool.onclick = async () => {
 
   //Create a new pool
    await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
-  //Read the count of pools
+    
+  //Get pool details
   const poolCount = await P2P_Insurance.methods.poolCount().call()
-
-  //await P2P_Insurance.methods.getPoolDetails (poolCount - 1).call()
+  const poolDetails = await P2P_Insurance.methods.getPoolDetails (poolCount - 1).call()
+  
   //display the pool details to the html
+  addPoolRow(poolCount - 1, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7])
 
 
-  const pools  = await P2P_Insurance.methods.getPools().call() // getPoolsAt(poolCount - 1)
-  const poolAddress = await pools.at(poolCount - 1); // address of pool contract
+  //Read the count of pools
+  //const poolCount = await P2P_Insurance.methods.poolCount().call()
+  //const pools  = await P2P_Insurance.methods.getPools().call()
+  //const poolAddress = await pools.at(poolCount - 1); // address of new pool contract
   //await P2P_Insurance.methods.getPoolDetails (poolAddress).call()
   //display the pool details to the html
-  addRow(poolCount - 1, poolAddress)
-
 
 }
 
 const ppGetValue = document.getElementById('pp-get-value')
 
 ppGetValue.onclick = async () => {
-
+  
   // instantiate web3 instance
   var web3 = new Web3(window.ethereum)
 
@@ -560,20 +530,24 @@ ppGetValue.onclick = async () => {
   const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
   P2P_Insurance.setProvider(window.ethereum);
 
-  const pools  = await P2P_Insurance.methods.getPools().call()
   const poolCount = await P2P_Insurance.methods.poolCount().call()
   for (let i=0; i < poolCount; i++)
   {
-	var poolAddress = await pools.at(i); // address of pool contract
-	//await P2P_Insurance.methods.getPoolDetails(poolAddress).call()
-	//await P2P_Insurance.methods.getPoolDetails(i).call()
+	const poolDetails = await P2P_Insurance.methods.getPoolDetails(i).call()
 
 	//display each pool details to the html
-	addPoolRow(i,poolAddress);
+  refreshPoolTable();
+  addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7])
 
-}
-  //const ppDisplayValue = document.getElementById('pp-display-value')
-  //ppDisplayValue.innerHTML = ' Pool 0: ' + pool1
+  const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
+
+  //display each pool details to the html
+  if (memberDetails[0] != -1)
+    {
+      refreshMemberTable();
+      addMemberRow(i, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
+    }
+  }
 
 }
 
@@ -592,8 +566,13 @@ ppJoinPool.onclick = async () => {
 	premAmount = web3.utils.toWei(premAmount,'ether');
 
 	await P2P_Insurance.methods.joinPool(poolId).send({from: ethereum.selectedAddress, value: premAmount})
-  
+
+  const memberDetails = await P2P_Insurance.methods.getMemberDetails(poolId , ethereum.selectedAddress).call()
+
 	  //display each pool details to the html
+    if (memberDetails[0] != -1)
+      addMemberRow(poolId, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
+
   
   }
 	//const ppDisplayValue = document.getElementById('pp-display-value')
