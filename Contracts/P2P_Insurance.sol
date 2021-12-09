@@ -21,11 +21,6 @@ contract P2P_Insurance {
     {
         return pools;
     }
-
-    function getPoolCount() public view returns (uint)
-    {
-        return poolCount;
-    }
     
     modifier onlyOwner(){
         require (msg.sender == owner,"It is not the contract owner");

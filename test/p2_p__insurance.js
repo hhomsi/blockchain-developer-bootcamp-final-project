@@ -27,7 +27,7 @@ contract("P2P_Insurance", function ( accounts ) {
   describe ("Pool Creation" , () => {
     it("New pool should be created", async() => {
       await p2pInstance.createNewPool (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
-      const poolCount = await p2pInstance.getPoolCount.call()
+      const poolCount = await p2pInstance.poolCount.call()
       const pools = await p2pInstance.getPools.call();
       const newPool = await pools.at(poolCount - 1 );
       let poolInstance = await InsurancePool.at(newPool);

@@ -52,4 +52,10 @@ migrate and testing locally:
     4- run truffle migrate --network development
     4- run truffle test --network development
 
+    truffle migrate --network rinkeby --reset --compile-all
+
+    truffle console --network rinkeby
+    truffle(rinkeby)> let contract = await P2P_Insurance.deployed()
+    contract.address
+
 
