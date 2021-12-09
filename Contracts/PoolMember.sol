@@ -10,10 +10,8 @@ interface PoolMember {
         uint totalClaims; // in a specific pool - in Wei
     }
     
-    function getMemberBalance(address _memberAddress) external view returns (uint);
-    function getMemberTotalClaims(address _memberAddress) external view returns(uint);
-    function getMemberRemainingCoverage(address _memberAddress) external view returns (uint);
-
+    function getMemberDetails(address _memberAddress) external view 
+        returns (int _poolMemberId , uint _balance, uint _totalClaims, uint _remainingCoverage);
 
     function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable returns (bool);
     function joinPool(address _memberAddress) external payable returns (bool,bool);

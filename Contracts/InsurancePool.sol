@@ -6,12 +6,12 @@ import "./PoolMember.sol";
 contract InsurancePool is PoolMember{
 
     bool locked; // used for reentrancy checks
-    PoolMember.Member[] members; // Always members[0] is the pool manager
-    uint minNumberOfMembers; // the minimum number of members in a pool - Unit256 as there is no potential packing here
+    PoolMember.Member[] public members; // Always members[0] is the pool manager
+    uint public minNumberOfMembers; // the minimum number of members in a pool - Unit256 as there is no potential packing here
     uint public premium; // the pool premium in Wei
-    uint maxCoveragePerMember; // the maximum coverage by a pool to a member - in Wei
+    uint public maxCoveragePerMember; // the maximum coverage by a pool to a member - in Wei
     PoolStatus public status; //the pool status
-    uint policyStartDate; // the policy start date since activation - policy validity is one year by defualt
+    uint public policyStartDate; // the policy start date since activation - policy validity is one year by defualt
 
     /* there will be other attributes offchain/frontend such as pool terms and conditions, pool coverage, max number of members, etc.
        max number of members - could be important for Block Gas Limit DoS - to limit members array size */
@@ -102,6 +102,11 @@ contract InsurancePool is PoolMember{
         return getPoolTotalBalance() - sumBalances;
     }
 
+    function getMembersCount() public view returns (uint)  
+    {
+        return members.length - 1;
+    }
+
     function getMemberIndex(address _memberAddress) private view returns (int poolMemberId)  
     {
         poolMemberId = -1;
@@ -124,25 +129,18 @@ contract InsurancePool is PoolMember{
 
     /* implementing PoolMember Interface Functions: */
 
-    function getMemberBalance(address _memberAddress) public view override returns (uint)  //
+    function getMemberDetails(address _memberAddress) external view override
+    returns (int _poolMemberId , uint _balance, uint _totalClaims, uint _remainingCoverage)
     {
-         int poolMemberId = getMemberIndex(_memberAddress);
-         require (poolMemberId >= 0,"It is not a pool member");
-         return members[uint(poolMemberId)].balance;
-    }
+         _poolMemberId = getMemberIndex (_memberAddress); //-1 not a member, 0 pool manager, >0 pool member
+         if (_poolMemberId >=0 )
+         {
+            PoolMember.Member memory member = members[uint(_poolMemberId)];
 
-    function getMemberTotalClaims(address _memberAddress) public view override returns (uint)  // 
-    {
-        int poolMemberId = getMemberIndex(_memberAddress);
-        require (poolMemberId >= 0,"It is not a pool member");
-        return members[uint(poolMemberId)].totalClaims;
-    }
-
-    function getMemberRemainingCoverage(address _memberAddress) public view override returns (uint) //
-    {
-        int poolMemberId = getMemberIndex(_memberAddress);
-        require (poolMemberId >= 0,"It is not a pool member");
-        return maxCoveragePerMember - members[uint(poolMemberId)].totalClaims;
+            _balance =  member.balance;
+            _totalClaims = member.totalClaims;
+            _remainingCoverage = maxCoveragePerMember - member.totalClaims;
+         }
     }
 
     //already checked if enough premium paid before creating the InsurancePool instance
