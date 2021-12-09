@@ -462,317 +462,6 @@ const ppABI = [
     }
   ]
 
-const poolABI = [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "message",
-          "type": "string"
-        }
-      ],
-      "name": "fallbackReceived",
-      "type": "event"
-    },
-    {
-      "stateMutability": "nonpayable",
-      "type": "fallback"
-    },
-    {
-      "inputs": [],
-      "name": "premium",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "status",
-      "outputs": [
-        {
-          "internalType": "enum InsurancePool.PoolStatus",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getPoolTotalBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getPoolAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getPoolAvailableBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberTotalClaims",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getMemberRemainingCoverage",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_minNumberOfMembers",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_premium",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_maxCoveragePerMember",
-          "type": "uint256"
-        }
-      ],
-      "name": "createPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "joinPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "isJoined",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "isPoolActivated",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "cancelPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "cancelSubscription",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "finishPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_claimAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "requestClaim",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_memberAddress",
-          "type": "address"
-        }
-      ],
-      "name": "withdrawBalance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
-
 // Using the 'load' event listener for Javascript to
 // check if window.ethereum is available
 
@@ -832,47 +521,30 @@ ppCreatePool.onclick = async () => {
     var web3 = new Web3(window.ethereum)
 
   // grab value from input
-  
-  let ppNumOfMemebers = document.getElementById('pp-pool-numOfMemebers').value
-  let ppPremium = document.getElementById('pp-pool-premium').value.toString()
+  var ppNumOfMemebers = document.getElementById('pp-pool-numOfMemebers').value
+  var ppPremium = document.getElementById('pp-pool-premium').value.toString()
   ppPremium = web3.utils.toWei(ppPremium,'ether');
-  let ppMaxCoverage = document.getElementById('pp-pool-maxCoveragePerMember').value.toString()
+  var ppMaxCoverage = document.getElementById('pp-pool-maxCoveragePerMember').value.toString()
   ppMaxCoverage = web3.utils.toWei(ppMaxCoverage,'ether');
 
-  //console.log(ppNumOfMemebers + " , " + ppPremium + " , " + ppMaxCoverage);
-
   // instantiate smart contract instance
-  var P2P_Insurance2 = new web3.eth.Contract(ppABI, ppAddress);
-  P2P_Insurance2.setProvider(window.ethereum);
+  var P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
 
-	 await P2P_Insurance2.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+  //Create a new pool
+   await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+  //Read the count of pools
+  const poolCount = await P2P_Insurance.methods.poolCount().call()
 
-  
-   //P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).estimateGas({from: ethereum.selectedAddres})
-  //.then(function(gasAmount){
-	 //await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, gas: 80000 /*, value: ppPremium*/})
-
-  //})
-
-	//await P2P_Insurance2.methods.createNewPool().send({from: ethereum.selectedAddress/*, gas: 3000000, value: ppPremium*/})
-
-    // await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress/*, value: ppPremium*/})
-  //.on ('transactionHash' , function (hash) {
-
- // })
-  //.on ('receipt' , function (receipt) {
-	//console.log (receipt);
-  //})
-  //.on('error', function (error,receipt) {
-  //console.log(error);
-  //});
+  //await P2P_Insurance.methods.getPoolDetails (poolCount - 1).call()
+  //display the pool details to the html
 
 
-
-
-    const val = await P2P_Insurance2.methods.poolCount().call()
-	console.log (val);
-  
+  const pools  = await P2P_Insurance.methods.getPools().call() // getPoolsAt(poolCount - 1)
+  const poolAddress = await pools.at(poolCount - 1); // address of pool contract
+  //await P2P_Insurance.methods.getPoolDetails (poolAddress).call()
+  //display the pool details to the html
+  addRow(poolCount - 1, poolAddress)
 
 
 }
@@ -889,22 +561,63 @@ ppGetValue.onclick = async () => {
   P2P_Insurance.setProvider(window.ethereum);
 
   const pools  = await P2P_Insurance.methods.getPools().call()
+  const poolCount = await P2P_Insurance.methods.poolCount().call()
+  for (let i=0; i < poolCount; i++)
+  {
+	var poolAddress = await pools.at(i); // address of pool contract
+	//await P2P_Insurance.methods.getPoolDetails(poolAddress).call()
+	//await P2P_Insurance.methods.getPoolDetails(i).call()
 
-  console.log(pools)
-
-  const pool1 = await pools.at(0); // address of first pool contract!
-
-  console.log(pool1)
-
-  const InsurancePool = new web3.eth.Contract(poolABI, pool1);
-  InsurancePool.setProvider(window.ethereum);
-
-  const premium  = await InsurancePool.methods.premium().call()
-
-
-
-  const ppDisplayValue = document.getElementById('pp-display-value')
-
-  ppDisplayValue.innerHTML = 'Current pool premium: ' + web3.utils.fromWei(premium , 'ether') 
+	//display each pool details to the html
+	addPoolRow(i,poolAddress);
 
 }
+  //const ppDisplayValue = document.getElementById('pp-display-value')
+  //ppDisplayValue.innerHTML = ' Pool 0: ' + pool1
+
+}
+
+const ppJoinPool = document.getElementById('join-pool')
+ppJoinPool.onclick = async () => {
+
+	// instantiate web3 instance
+	var web3 = new Web3(window.ethereum)
+  
+	// instantiate smart contract instance
+	const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+	P2P_Insurance.setProvider(window.ethereum);
+
+	var poolId = document.getElementById('join-pool-id').value
+	var premAmount = document.getElementById('join-amount').value.toString()
+	premAmount = web3.utils.toWei(premAmount,'ether');
+
+	await P2P_Insurance.methods.joinPool(poolId).send({from: ethereum.selectedAddress, value: premAmount})
+  
+	  //display each pool details to the html
+  
+  }
+	//const ppDisplayValue = document.getElementById('pp-display-value')
+	//ppDisplayValue.innerHTML = ' Pool 0: ' + pool1
+
+
+/*
+const pools  = await P2P_Insurance.methods.getPools().call()
+const pool1 = await pools.at(0); // address of first pool contract!
+const InsurancePool = new web3.eth.Contract(poolABI, pool1);
+InsurancePool.setProvider(window.ethereum);
+const premium  = await InsurancePool.methods.premium().call()
+*/
+
+// web3.utils.fromWei(premium , 'ether') 
+
+/*   
+  await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+  	.on ('transactionHash' , function (hash) {
+  	})
+  	.on ('receipt' , function (receipt) {
+		console.log (receipt);
+  	})
+  	.on('error', function (error,receipt) {
+  		console.log(error);
+  	});
+*/

@@ -16,28 +16,89 @@
   </p>
   <div id="mm-detected"></div>
 
+
   <!-- Connect to MetaMask Wallet -->
 
   <button id="mm-connect">Connect to MetaMask</button>
+
+  &nbsp;<br/>
 
   <!-- Display current address -->
 
   <div id="mm-current-account"></div>
 
   <!-- Provide an input to change the contract text value -->
+  
+  &nbsp;<br/>
+
   <div>
+
   <input id="pp-pool-numOfMemebers" type="number" placeholder="Min Number of Members"/>  
   <input id="pp-pool-premium" type="number" placeholder="Pool Premium"/>  
   <input id="pp-pool-maxCoveragePerMember" type="number" placeholder="Max Coverage/Member"/>  
-
-</div>
   <button id="create-pool-button">Create Pool</button>
 
-  <!-- Read input from contract -->
-  <div>
-    <button id="pp-get-value">Get Pool Balance</button>
   </div>
-  <div id="pp-display-value">Current Pool Balance Value: </div>
+
+  &nbsp;<br/>
+
+  <!-- Read input from contract -->
+
+  <div>
+    &nbsp;<br/>
+
+    <button id="pp-get-value">Display Current Pools</button>
+  </div>
+  
+
+
+  <div id="pools">
+    <b>Current Pools ...</b>
+    <table id="poolsList"  border="1" cellpadding="2">
+        <tr>
+            <td><b>Pool Id</b></td>
+            <td><b>Pool Address</b></td>
+        </tr>
+    </table>
+    &nbsp;<br/>
+  </div>
+
+  <div>
+    <input id="join-pool-id" type="number" placeholder="Pool ID"/> 
+    <input id="join-amount" type="number" placeholder="Deposit Premium"/>   
+    <button id="join-pool">Join a Pool</button>
+  </div>
+
+  &nbsp;<br/>
+
+  <div id="member">
+    <b>Member joined to these Pools ...</b>
+    <table id="memberPools"  border="1" cellpadding="2">
+        <tr>
+            <td><b>Pool Id</b></td>
+            <td><b>Total Claims</b></td>
+            <td><b>Remaining Coverage</b></td>
+            <td><b>Available Balance</b></td>
+        </tr>
+    </table>
+    &nbsp;<br/>
+  </div>
+
+  <div>
+    <button id="withdraw-balance">Withdraw Balance</button>
+    <button id="cancel-membership">Cancel Membership</button>
+    <button id="cancel-pool">Cancel a Pool</button>
+    <button id="finish-pool">Finish a Pool</button>
+  </div>
+
+  &nbsp;<br/>
+
+  <div>
+    <input id="pool-id2" type="number" placeholder="Pool ID"/>  
+    <input id="claim-amount" type="number" placeholder="Claim Amount"/>  
+    <button id="request-claim">Request a Claim</button>
+
+  </div>
 
 </body>
 
@@ -45,6 +106,8 @@
 
 <!-- Had trouble and had to move the script down! -->
 <script src="dapp.js"></script>
+
+<script src="UI.js"></script>
 
 
 </html>
