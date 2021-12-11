@@ -460,17 +460,9 @@ window.addEventListener('load', function() {
 })
 
 // Grabbing the button object,  
-
 const mmEnable = document.getElementById('mm-connect');
 
-// since MetaMask has been detected, we know
-// `ethereum` is an object, so we'll do the canonical
-// MM request to connect the account. 
-// 
-// typically we only request access to MetaMask when we
-// need the user to do something, but this is just for
-// an example
- 
+// typically we only request access to MetaMask when we need the user to do something
 mmEnable.onclick = async () => {
   await ethereum.request({ method: 'eth_requestAccounts'})
   // grab mm-current-account
@@ -479,14 +471,53 @@ mmEnable.onclick = async () => {
   mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress
 }
 
-// grab the button for input to a contract:
+const ppGetValue = document.getElementById('pp-get-value')
+ppGetValue.onclick = async () => {
+  getPoolsAndMembersDetails();}
 
 const ppCreatePool = document.getElementById('create-pool-button');
-
 ppCreatePool.onclick = async () => {
-  
-    // instantiate web3 instance
-    var web3 = new Web3(window.ethereum)
+  createPool();}
+
+const ppRequestClaim = document.getElementById('request-claim-button');
+ppRequestClaim.onclick = async () => {
+  requestClaim();}
+
+
+async function getPoolsAndMembersDetails ()
+{
+  // instantiate web3 instance
+  var web3 = new Web3(window.ethereum)
+
+  // instantiate smart contract instance
+  const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
+
+  refreshPoolTable();
+  refreshMemberTable();
+
+  const poolCount = await P2P_Insurance.methods.poolCount().call()
+  for (let i=0; i < poolCount; i++)
+  {
+	  const poolDetails = await P2P_Insurance.methods.getPoolDetails(i).call()
+    const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
+    const isMemberJoined = (memberDetails[0] != -1) ? true : false;
+
+	  //display each pool details to the html
+    addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7], !isMemberJoined)
+
+    //display each pool details to the html
+    if (isMemberJoined)
+      {
+        addMemberRow(i, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
+      }
+  }
+}
+
+async function createPool()
+{
+  // instantiate web3 instance
+  var web3 = new Web3(window.ethereum)
 
   // grab value from input
   var ppNumOfMemebers = document.getElementById('pp-pool-numOfMemebers').value
@@ -500,84 +531,127 @@ ppCreatePool.onclick = async () => {
   P2P_Insurance.setProvider(window.ethereum);
 
   //Create a new pool
-   await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+  try 
+  { 
+    await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
     
-  //Get pool details
-  const poolCount = await P2P_Insurance.methods.poolCount().call()
-  const poolDetails = await P2P_Insurance.methods.getPoolDetails (poolCount - 1).call()
+    //Get pool details
+    const poolCount = await P2P_Insurance.methods.poolCount().call()
+    const poolDetails = await P2P_Insurance.methods.getPoolDetails (poolCount - 1).call()
   
-  //display the pool details to the html
-  addPoolRow(poolCount - 1, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7])
+    //display the pool details to the html
+    getPoolsAndMembersDetails(); // refresh the tables by reading the updated blockchain state variables
 
-
-  //Read the count of pools
-  //const poolCount = await P2P_Insurance.methods.poolCount().call()
-  //const pools  = await P2P_Insurance.methods.getPools().call()
-  //const poolAddress = await pools.at(poolCount - 1); // address of new pool contract
-  //await P2P_Insurance.methods.getPoolDetails (poolAddress).call()
-  //display the pool details to the html
-
+  } catch (error) {
+      alert("The pool can't be created!")}
 }
 
-const ppGetValue = document.getElementById('pp-get-value')
-
-ppGetValue.onclick = async () => {
-  
-  // instantiate web3 instance
+async function requestClaim ()
+{
   var web3 = new Web3(window.ethereum)
-
-  // instantiate smart contract instance
   const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
   P2P_Insurance.setProvider(window.ethereum);
 
-  const poolCount = await P2P_Insurance.methods.poolCount().call()
-  for (let i=0; i < poolCount; i++)
+  // grab value from input
+  var poolId = document.getElementById('pool-id').value
+  var amount = document.getElementById('claim-amount').value.toString()
+  amount = web3.utils.toWei(amount,'ether');
+
+  try
   {
-	const poolDetails = await P2P_Insurance.methods.getPoolDetails(i).call()
-
-	//display each pool details to the html
-  refreshPoolTable();
-  addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7])
-
-  const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
-
-  //display each pool details to the html
-  if (memberDetails[0] != -1)
-    {
-      refreshMemberTable();
-      addMemberRow(i, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
-    }
-  }
-
+    await P2P_Insurance.methods.requestClaim(poolId, amount).send({from: ethereum.selectedAddress})
+    getPoolsAndMembersDetails()
+  } catch (error){
+    alert("The claim request can't be completed!")}
 }
 
-const ppJoinPool = document.getElementById('join-pool')
-ppJoinPool.onclick = async () => {
-
-	// instantiate web3 instance
+async function joinPool(poolId, amount)
+{
+  // instantiate web3 instance
 	var web3 = new Web3(window.ethereum)
   
 	// instantiate smart contract instance
 	const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
 	P2P_Insurance.setProvider(window.ethereum);
 
-	var poolId = document.getElementById('join-pool-id').value
-	var premAmount = document.getElementById('join-amount').value.toString()
-	premAmount = web3.utils.toWei(premAmount,'ether');
+	//var poolId = document.getElementById('join-pool-id').value
+	//var premAmount = document.getElementById('join-amount').value.toString()
+	//premAmount = web3.utils.toWei(premAmount,'ether');
 
-	await P2P_Insurance.methods.joinPool(poolId).send({from: ethereum.selectedAddress, value: premAmount})
-
-  const memberDetails = await P2P_Insurance.methods.getMemberDetails(poolId , ethereum.selectedAddress).call()
+	try
+  {
+    await P2P_Insurance.methods.joinPool(poolId).send({from: ethereum.selectedAddress, value: amount})
+  
+    const memberDetails = await P2P_Insurance.methods.getMemberDetails(poolId , ethereum.selectedAddress).call()
 
 	  //display each pool details to the html
     if (memberDetails[0] != -1)
-      addMemberRow(poolId, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
+    {
+      getPoolsAndMembersDetails(); // refresh the tables by reading the updated blockchain state variables
+    }  
+  } catch (error) {
+      alert("The member can't join the pool!");
+    }
+}
 
-  
-  }
-	//const ppDisplayValue = document.getElementById('pp-display-value')
-	//ppDisplayValue.innerHTML = ' Pool 0: ' + pool1
+async function withdrawBalance (poolId)
+{
+  var web3 = new Web3(window.ethereum)
+  const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
 
+  try
+  {
+    await P2P_Insurance.methods.withdrawBalance(poolId).send({from: ethereum.selectedAddress})
+
+    getPoolsAndMembersDetails();
+  } catch (error) {
+    alert("The withdrawal can't be completed!")}
+}
+
+async function finishPool (poolId)
+{
+  var web3 = new Web3(window.ethereum)
+  const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
+
+  try
+  {
+    await P2P_Insurance.methods.finshPool(poolId).send({from: ethereum.selectedAddress})
+
+    getPoolsAndMembersDetails();
+  } catch (error) {
+    alert("The pool can't be finished!")}
+}
+
+async function cancelPool (poolId)
+{
+  var web3 = new Web3(window.ethereum)
+  const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
+
+  try
+  {
+    await P2P_Insurance.methods.cancelPool(poolId).send({from: ethereum.selectedAddress})
+    getPoolsAndMembersDetails()
+  } catch (error){
+    alert("The pool can't be canceled!")}
+}
+
+async function cancelMembership (poolId)
+{
+  var web3 = new Web3(window.ethereum)
+  const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
+  P2P_Insurance.setProvider(window.ethereum);
+
+  try
+  {
+    await P2P_Insurance.methods.cancelMembershipBeforPoolActivation(poolId).send({from: ethereum.selectedAddress})
+
+    getPoolsAndMembersDetails();
+  } catch (error) {
+    alert("Member can't cancel his membership!")}
+}
 
 /*
 const pools  = await P2P_Insurance.methods.getPools().call()
@@ -587,10 +661,8 @@ InsurancePool.setProvider(window.ethereum);
 const premium  = await InsurancePool.methods.premium().call()
 */
 
-// web3.utils.fromWei(premium , 'ether') 
-
 /*   
-  await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+   P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
   	.on ('transactionHash' , function (hash) {
   	})
   	.on ('receipt' , function (receipt) {

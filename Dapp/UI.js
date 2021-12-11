@@ -1,4 +1,4 @@
-function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoveragePerMember, poolStatus, policyStartDate, availableFund, membersCount) {
+function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoveragePerMember, poolStatus, policyStartDate, availableFund, membersCount,addJoinPoolButton) {
          
     var table = document.getElementById("poolsList");
 
@@ -17,6 +17,9 @@ function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoverag
     row.insertCell(6).innerHTML= getPolicyDate (policyStartDate);
     row.insertCell(7).innerHTML= web3.utils.fromWei(availableFund , 'ether');
     row.insertCell(8).innerHTML= membersCount;
+
+    const memberActions = (addJoinPoolButton) ? '<input type="button" value = "Join Pool" style="margin:5px" onClick="Javacsript:joinP(this)">' : 'Joined'
+    row.insertCell(9).innerHTML= memberActions
 
 }
 
@@ -37,6 +40,13 @@ function addMemberRow(poolId, memberId, balance, totalClaims, remainingCoverage 
     row.insertCell(3).innerHTML= web3.utils.fromWei(remainingCoverage , 'ether');
     row.insertCell(4).innerHTML= (memberId == 0) ? 'Yes' : 'No';
 
+    const memberActions = '<div>' +
+                    '<input type="button" value = "Withdraw Balance" style="margin:5px" onClick="Javacsript:withdraw(this)">' +
+                    '<input type="button" value = "Finish Pool" style="margin:5px" onClick="Javacsript:finishP(this)">' +
+                    '<input type="button" value = "Cancel Pool" style="margin:5px" onClick="Javacsript:cancelP(this)">' +
+                    '<input type="button" value = "Cancel Membership" style="margin:5px" onClick="Javacsript:cancelM(this)">' +
+                    '</div>'
+    row.insertCell(5).innerHTML= memberActions;
 }
 
 function getPoolStatus(_poolStatus)
@@ -79,3 +89,47 @@ function refreshMemberTable()
         table.deleteRow(tableHeaderRowCount); 
 }
 
+function withdraw (obj)
+{
+    var index = obj.parentNode.parentNode.parentNode.rowIndex
+    var memberDetails = document.getElementById("memberPools").rows[index].cells;
+    poolId = memberDetails[0].innerHTML;
+    if (memberDetails[1].innerHTML > 0)
+        withdrawBalance(poolId);
+    else
+        alert ('There is no avialable balance!');
+}
+
+function finishP (obj)
+{
+    var index = obj.parentNode.parentNode.parentNode.rowIndex
+    var memberDetails = document.getElementById("memberPools").rows[index].cells;
+    poolId = memberDetails[0].innerHTML;
+    finishPool(poolId);
+}
+
+function cancelP (obj)
+{
+    var index = obj.parentNode.parentNode.parentNode.rowIndex
+    var memberDetails = document.getElementById("memberPools").rows[index].cells;
+    poolId = memberDetails[0].innerHTML;
+    cancelPool(poolId);
+}
+
+function cancelM (obj)
+{
+    var index = obj.parentNode.parentNode.parentNode.rowIndex
+    var memberDetails = document.getElementById("memberPools").rows[index].cells;
+    poolId = memberDetails[0].innerHTML;
+    cancelMembership(poolId);
+}
+
+function joinP (obj)
+{
+    var index = obj.parentNode.parentNode.rowIndex
+    var memberDetails = document.getElementById("poolsList").rows[index].cells;
+    poolId = memberDetails[0].innerHTML;
+    var web3 = new Web3(window.ethereum)
+    amount = web3.utils.toWei(memberDetails[3].innerHTML.toString() , 'ether');
+    joinPool(poolId , amount);
+}

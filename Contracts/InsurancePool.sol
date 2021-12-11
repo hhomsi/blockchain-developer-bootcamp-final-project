@@ -274,8 +274,8 @@ contract InsurancePool is PoolMember{
         (bool success,) = _memberAddress.call{value:balance}("");
         require (success, "Transfer failed");
 
-        if (status == PoolStatus.Canceled && getPoolTotalBalance() == 0)
-            selfDestructPool();
+        //if (status == PoolStatus.Canceled && getPoolTotalBalance() == 0)
+            //selfDestructPool();
 
         return true;
     } 
@@ -286,11 +286,11 @@ contract InsurancePool is PoolMember{
     //clean up the canceled pool? I think Yes for (Gaz Optimization /return gaz),
     //because the policy is not activated and no important transactions to keep stored on blockchain
     //We can have the archive of canceled pools offchain if needed
-    function selfDestructPool() private onlycanceledPool 
+    /*function selfDestructPool() private onlycanceledPool 
     {
         assert(getPoolTotalBalance() == 0); // the pool fund should be already empty
         selfdestruct(payable(msg.sender)); // we are sure that there is no remaining Ether before the self destruction
-    }
+    }*/
 
     //fall back function 
     //it is not payable - not accepting to receive plain ether and this will raise exception!
