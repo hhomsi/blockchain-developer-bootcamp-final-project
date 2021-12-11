@@ -430,46 +430,71 @@ const ppABI =  [
   }
 ]
 
+const initialize = () => 
+{
+    //Basic Actions Section
+    const mmEnable = document.getElementById('mm-connect');
+    const mmDetected = document.getElementById('mm-detected')
+
+    //Created check function to see if the MetaMask extension is installed
+    const isMetaMaskInstalled = () => 
+    {
+      //Have to check the ethereum binding on the window object to see if it's installed
+      const { ethereum } = window;
+      return Boolean(ethereum && ethereum.isMetaMask);
+    }
+
+    const MetaMaskClientCheck = () => {
+      //Now we check to see if Metmask is installed
+      if (!isMetaMaskInstalled()) {
+        mmDetected.innerHTML += 'MetaMask Not Available!'
+        //If it isn't installed we ask the user to click to install it
+        mmEnable.innerText = 'Click here to install MetaMask!';
+        //When the button is clicked we call th is function
+        mmEnable.onclick = onClickInstall;
+        //The button is now disabled
+        mmEnable.disabled = false;
+      } else {
+        mmDetected.innerHTML += 'MetaMask Is Available!'
+        //If MetaMask is installed we ask the user to connect to their wallet
+        mmEnable.innerText = 'Connect to MetaMask';
+        //When the button is clicked we call this function to connect the users MetaMask Wallet
+        mmEnable.onclick = onClickConnect;
+        //The button is now disabled
+        mmEnable.disabled = false;
+      }
+    };
+
+    MetaMaskClientCheck();
+}
+//We create a new MetaMask onboarding object to use in our app
+const onboarding = new MetaMaskOnboarding();
+const onClickInstall = () => {
+  const mmEnable = document.getElementById('mm-connect');
+  mmEnable.innerText = 'Onboarding in progress';
+  mmEnable.disabled = true;
+  //On this object we have startOnboarding which will start the onboarding process for our end user
+  onboarding.startOnboarding();
+};
+
+const onClickConnect = async () => {
+  try {
+    // Will open the MetaMask UI
+    // You should disable this button while the request is pending!
+    await ethereum.request({ method: 'eth_requestAccounts' });
+
+    // grab mm-current-account and populate it with the current address
+    var mmCurrentAccount = document.getElementById('mm-current-account');
+    mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // Using the 'load' event listener for Javascript to
 // check if window.ethereum is available
-
-window.addEventListener('load', function() {
-  
-  if (typeof window.ethereum !== 'undefined') {
-    console.log('window.ethereum is enabled')
-    if (window.ethereum.isMetaMask === true) {
-      console.log('MetaMask is active')
-      let mmDetected = document.getElementById('mm-detected')
-      mmDetected.innerHTML += 'MetaMask Is Available!'
-
-      // add in web3 herwindowe
-      var web3 = new Web3(window.ethereum)
-
-    } else {
-      console.log('MetaMask is not available')
-      let mmDetected = document.getElementById('mm-detected')
-      mmDetected.innerHTML += 'MetaMask Not Available!'
-      // let node = document.createTextNode('<p>MetaMask Not Available!<p>')
-      // mmDetected.appendChild(node)
-    }
-  } else {
-    console.log('window.ethereum is not found')
-    let mmDetected = document.getElementById('mm-detected')
-    mmDetected.innerHTML += '<p>MetaMask Not Available!<p>'
-  }
-})
-
-// Grabbing the button object,  
-const mmEnable = document.getElementById('mm-connect');
-
-// typically we only request access to MetaMask when we need the user to do something
-mmEnable.onclick = async () => {
-  await ethereum.request({ method: 'eth_requestAccounts'})
-  // grab mm-current-account
-  // and populate it with the current address
-  var mmCurrentAccount = document.getElementById('mm-current-account');
-  mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress
-}
+window.addEventListener('load', initialize);
 
 const ppGetValue = document.getElementById('pp-get-value')
 ppGetValue.onclick = async () => {

@@ -11,6 +11,10 @@ pre-requisits:
 - npm install dotenv
 - register for a free account on Infura, and creat a new project
 - (installing truffle, node , npm, ...)
+The MetaMask Extension downloaded.
+Node.js Downloaded and Installed
+npm install
+npm i metamask-onboarding
 
 -in Migration Folder, add a new file: 2_deploy_contracts.js // no need
 var <x> = artifacts.require(".<contract_name>.sol");
