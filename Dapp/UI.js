@@ -1,4 +1,4 @@
-function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoveragePerMember, poolStatus, policyStartDate, availableFund, membersCount,addJoinPoolButton) {
+function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoveragePerMember, poolStatus, policyStartDate, poolBalance, availableFund, membersCount,addJoinPoolButton) {
          
     var table = document.getElementById("poolsList");
 
@@ -15,11 +15,12 @@ function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoverag
     row.insertCell(4).innerHTML= web3.utils.fromWei(maxCoveragePerMember , 'ether');
     row.insertCell(5).innerHTML= getPoolStatus(poolStatus);
     row.insertCell(6).innerHTML= getPolicyDate (policyStartDate);
-    row.insertCell(7).innerHTML= web3.utils.fromWei(availableFund , 'ether');
-    row.insertCell(8).innerHTML= membersCount;
+    row.insertCell(7).innerHTML= web3.utils.fromWei(poolBalance , 'ether');
+    row.insertCell(8).innerHTML= web3.utils.fromWei(availableFund , 'ether');
+    row.insertCell(9).innerHTML= membersCount;
 
     const memberActions = (addJoinPoolButton) ? '<input type="button" value = "Join Pool" style="margin:5px" onClick="Javacsript:joinP(this)">' : 'Joined'
-    row.insertCell(9).innerHTML= memberActions
+    row.insertCell(10).innerHTML= memberActions
 
 }
 

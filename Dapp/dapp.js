@@ -1,8 +1,8 @@
 // contract address on Rinkeby:
-const ppAddress = '0x44a170Ba86bf31bC6746775A5337410a589C4A08'
+const ppAddress = '0xa53C3219b80F90C9294BDA42C191fE530b369CE7'
 
 // add contract ABI from Remix:
-const ppABI = [
+const ppABI =  [
   {
     "inputs": [],
     "stateMutability": "nonpayable",
@@ -504,7 +504,7 @@ async function getPoolsAndMembersDetails ()
     const isMemberJoined = (memberDetails[0] != -1) ? true : false;
 
 	  //display each pool details to the html
-    addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7], !isMemberJoined)
+    addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7], poolDetails[8], !isMemberJoined)
 
     //display each pool details to the html
     if (isMemberJoined)

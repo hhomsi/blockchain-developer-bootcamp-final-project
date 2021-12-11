@@ -26,16 +26,10 @@ contract("P2P_Insurance", function ( accounts ) {
 
   describe ("Pool Creation" , () => {
     it("New pool should be created", async() => {
+      const poolCountBefore = await p2pInstance.poolCount.call()
       await p2pInstance.createNewPool (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
-      const poolCount = await p2pInstance.poolCount.call()
-      const pools = await p2pInstance.getPools.call();
-      const newPool = await pools.at(poolCount - 1 );
-      let poolInstance = await InsurancePool.at(newPool);
-      const premium = await poolInstance.premium.call();
-      console.log(web3.utils.toNumber(premium));
-      //const pools = await p2pInstance.getPoolCount.call();
-      //console.log(web3.utils.toNumber(pools));
-      assert.isTrue(true);
+      const poolCountAfter = await p2pInstance.poolCount.call()
+      assert.notEqual(poolCountBefore , poolCountAfter , "The pool can't be created!");
     });
 
     it("Pool should not be created: Amount transfered is less than the pool premium", async() => {
@@ -109,10 +103,15 @@ contract("P2P_Insurance", function ( accounts ) {
 
         describe ("Distribute surplus to the members" , () => {
           it("Member " + member1 + " should withdraw the available balance successfully", async() => {
-            const memberBalanceBefore = await poolInstance.getMemberBalance.call(member1);
+            const memberBefore = await poolInstance.members.call(1);
+            memberBalanceBefore = memberBefore[1].toNumber();
+
             await poolInstance.withdrawBalance (member1);
-            const memberBalanceAfter= await poolInstance.getMemberBalance.call(member1);
-            assert.notEqual(memberBalanceBefore.toNumber(), memberBalanceAfter.toNumber() , "The withdrawal has failed!");
+
+            const memberAfter = await poolInstance.members.call(1);
+            const memberBalanceAfter = memberAfter[1].toNumber();
+
+            assert.notEqual(memberBalanceBefore, memberBalanceAfter, "The withdrawal has failed!");
           });
 
         });
@@ -124,3 +123,13 @@ contract("P2P_Insurance", function ( accounts ) {
   });
 
 });
+
+/*
+await p2pInstance.createNewPool (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
+const poolCount = await p2pInstance.poolCount.call()
+const pools = await p2pInstance.getPools.call();
+const newPool = await pools.at(poolCount - 1 );
+let poolInstance = await InsurancePool.at(newPool);
+const premium = await poolInstance.premium.call();
+...
+*/

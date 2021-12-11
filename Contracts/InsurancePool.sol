@@ -286,6 +286,7 @@ contract InsurancePool is PoolMember{
     //clean up the canceled pool? I think Yes for (Gaz Optimization /return gaz),
     //because the policy is not activated and no important transactions to keep stored on blockchain
     //We can have the archive of canceled pools offchain if needed
+    
     /*function selfDestructPool() private onlycanceledPool 
     {
         assert(getPoolTotalBalance() == 0); // the pool fund should be already empty

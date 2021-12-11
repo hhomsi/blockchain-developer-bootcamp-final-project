@@ -56,7 +56,7 @@ contract P2P_Insurance {
     }
 
     function getPoolDetails(uint _poolId) public view 
-    returns (address _poolAddress,uint _minMembers,uint _premium,uint _maxCoverage,uint _status,uint _startDate,uint _poolFund,uint _memberCount)
+    returns (address _poolAddress,uint _minMembers,uint _premium,uint _maxCoverage,uint _status,uint _startDate,uint _poolBalance, uint _poolFund,uint _memberCount)
     {
         _poolAddress = pools[_poolId].getPoolAddress();
         _minMembers = pools[_poolId].minNumberOfMembers();
@@ -64,6 +64,7 @@ contract P2P_Insurance {
         _maxCoverage = pools[_poolId].maxCoveragePerMember();
         _status = uint(pools[_poolId].status());
         _startDate = pools[_poolId].policyStartDate();
+        _poolBalance = pools[_poolId].getPoolTotalBalance();
         _poolFund = pools[_poolId].getPoolAvailableBalance();
         _memberCount = pools[_poolId].getMembersCount();              
     }
