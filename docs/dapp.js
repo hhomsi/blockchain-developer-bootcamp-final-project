@@ -518,25 +518,36 @@ async function getPoolsAndMembersDetails ()
   const P2P_Insurance = new web3.eth.Contract(ppABI, ppAddress);
   P2P_Insurance.setProvider(window.ethereum);
 
-  refreshPoolTable();
-  refreshMemberTable();
+  clearPoolTable();
+  clearMemberTable();
+  loadingInProgress();
 
   const poolCount = await P2P_Insurance.methods.poolCount().call()
+  let pools = [];
+  let members = [];
+  let j = 0;
   for (let i=0; i < poolCount; i++)
   {
 	  const poolDetails = await P2P_Insurance.methods.getPoolDetails(i).call()
     const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
     const isMemberJoined = (memberDetails[0] != -1) ? true : false;
+    pools[i] = poolDetails;
+    pools[i][9] = isMemberJoined;
 
-	  //display each pool details to the html
-    addPoolRow(i, poolDetails[0], poolDetails[1], poolDetails[2], poolDetails[3], poolDetails[4], poolDetails[5], poolDetails[6], poolDetails[7], poolDetails[8], !isMemberJoined)
-
-    //display each pool details to the html
     if (isMemberJoined)
       {
-        addMemberRow(i, memberDetails[0], memberDetails[1], memberDetails[2], memberDetails[3] )
+        members[j] = memberDetails;
+        j++;
       }
   }
+  //display pool details to the html
+  for (let i=0; i < pools.length; i++)
+    addPoolRow(i, pools[i][0], pools[i][1], pools[i][2], pools[i][3], pools[i][4], pools[i][5], pools[i][6], pools[i][7], pools[i][8], ! pools[i][9])
+  //display member details to the html
+  for (let i=0; i < members.length; i++)
+    addMemberRow(i, members[i][0], members[i][1], members[i][2], members[i][3] )
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function createPool()
@@ -559,6 +570,9 @@ async function createPool()
   try 
   { 
     await P2P_Insurance.methods.createNewPool(ppNumOfMemebers,ppPremium,ppMaxCoverage).send({from: ethereum.selectedAddress, value: ppPremium})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
     
     //Get pool details
     const poolCount = await P2P_Insurance.methods.poolCount().call()
@@ -566,9 +580,10 @@ async function createPool()
   
     //display the pool details to the html
     getPoolsAndMembersDetails(); // refresh the tables by reading the updated blockchain state variables
-
   } catch (error) {
       alert("The pool can't be created!")}
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function requestClaim ()
@@ -585,9 +600,15 @@ async function requestClaim ()
   try
   {
     await P2P_Insurance.methods.requestClaim(poolId, amount).send({from: ethereum.selectedAddress})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
     getPoolsAndMembersDetails()
   } catch (error){
     alert("The claim request can't be completed!")}
+    
+  document.getElementById('loader').style.display = "none";
+
 }
 
 async function joinPool(poolId, amount)
@@ -606,6 +627,9 @@ async function joinPool(poolId, amount)
 	try
   {
     await P2P_Insurance.methods.joinPool(poolId).send({from: ethereum.selectedAddress, value: amount})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
   
     const memberDetails = await P2P_Insurance.methods.getMemberDetails(poolId , ethereum.selectedAddress).call()
 
@@ -617,6 +641,8 @@ async function joinPool(poolId, amount)
   } catch (error) {
       alert("The member can't join the pool!");
     }
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function withdrawBalance (poolId)
@@ -628,10 +654,15 @@ async function withdrawBalance (poolId)
   try
   {
     await P2P_Insurance.methods.withdrawBalance(poolId).send({from: ethereum.selectedAddress})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
 
     getPoolsAndMembersDetails();
   } catch (error) {
     alert("The withdrawal can't be completed!")}
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function finishPool (poolId)
@@ -643,10 +674,15 @@ async function finishPool (poolId)
   try
   {
     await P2P_Insurance.methods.finshPool(poolId).send({from: ethereum.selectedAddress})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
 
     getPoolsAndMembersDetails();
   } catch (error) {
     alert("The pool can't be finished!")}
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function cancelPool (poolId)
@@ -658,9 +694,15 @@ async function cancelPool (poolId)
   try
   {
     await P2P_Insurance.methods.cancelPool(poolId).send({from: ethereum.selectedAddress})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
+
     getPoolsAndMembersDetails()
   } catch (error){
     alert("The pool can't be canceled!")}
+
+  document.getElementById('loader').style.display = "none";
 }
 
 async function cancelMembership (poolId)
@@ -672,10 +714,15 @@ async function cancelMembership (poolId)
   try
   {
     await P2P_Insurance.methods.cancelMembershipBeforPoolActivation(poolId).send({from: ethereum.selectedAddress})
+    .on ('transactionHash' , function (hash) {
+      loadingInProgress();
+  	})
 
     getPoolsAndMembersDetails();
   } catch (error) {
     alert("Member can't cancel his membership!")}
+
+  document.getElementById('loader').style.display = "none";
 }
 
 /*

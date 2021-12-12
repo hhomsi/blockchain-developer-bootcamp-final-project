@@ -7,6 +7,31 @@
   <title>My Simple Dapp</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="./dist/metamask-onboarding.bundle.js"></script>
+
+  <style >
+    #loader {
+        border: 12px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 12px solid #444444;
+        width: 70px;
+        height: 70px;
+        animation: spin 1s linear infinite;
+    } 
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    } 
+    .center {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -46,10 +71,8 @@
   <div>
     &nbsp;<br/>
 
-    <button id="pp-get-value">Display Current Pools</button>
+    <button id="pp-get-value">Refresh Pools</button>
   </div>
-  
-
 
   <div id="pools">
     <b>Current Pools ...</b>
@@ -94,6 +117,8 @@
     <input id="claim-amount" type="number" placeholder="Claim Amount"/>  
     <button id="request-claim-button">Request a Claim</button>
   </div>
+
+  <div id="loader" class="center" style="display: none"></div>
 
 </body>
 

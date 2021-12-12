@@ -72,7 +72,7 @@ function getPolicyDate(_policyDate)
         return new Date (_policyDate * 1000);
 }
 
-function refreshPoolTable()
+function clearPoolTable()
 {
     var tableHeaderRowCount = 1; 
     var table = document.getElementById('poolsList');
@@ -81,7 +81,7 @@ function refreshPoolTable()
         table.deleteRow(tableHeaderRowCount); 
 }
 
-function refreshMemberTable()
+function clearMemberTable()
 {
     var tableHeaderRowCount = 1; 
     var table = document.getElementById('memberPools');
@@ -133,4 +133,21 @@ function joinP (obj)
     var web3 = new Web3(window.ethereum)
     amount = web3.utils.toWei(memberDetails[3].innerHTML.toString() , 'ether');
     joinPool(poolId , amount);
+}
+
+function loadingInProgress()
+{
+    if (document.getElementById('loader').style.display = "none")
+    {
+        document.getElementById('loader').style.display = "block";
+        document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector("body").style.visibility = "hidden";
+                document.querySelector("#loader").style.visibility = "visible";
+            } else {
+                document.querySelector("#loader").style.display = "none";
+                document.querySelector("body").style.visibility = "visible";
+            }
+        };
+    }
 }
