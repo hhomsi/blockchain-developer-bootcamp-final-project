@@ -22,21 +22,16 @@ https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 - Truffle and Ganache-Cli
 
 ## Cloning the project repo:
-In your terminal, open a new folder and run:
+
+In your terminal, open a new project folder and run:
   git clone https://github.com/hhomsi/blockchain-developer-bootcamp-final-project.git
-
-
-- @truffle/hdwallet-provider
-- dotenv
-
 
 ## Contracts
 
-1- Run npm install in project root to install Truffle build and smart contract dependencies
-2- In your terminal/project root, run local testnet in port 8545 with: Ganache-Cli (and keep it open!)
-3- Open a new terminal, run: truffle migrate --network development
-4- Run: truffle test --network development
-
+- Run npm install in project root to install Truffle build and smart contract dependencies (@truffle/hdwallet-provider, dotenv)
+- In your terminal/project root, run local testnet in port 8545 with: Ganache-Cli (and keep it open!)
+- Open a new terminal, run: truffle migrate --network development
+- Run: truffle test --network development
 
 ## Frontend
 
@@ -98,11 +93,11 @@ In your terminal, open a new folder and run:
 
 # TODO features
 
-1- Excess in pool Coverage (reimbursement through the re-insurer / with sharing part of premium/contribution)
-2- Eligibility for the claims requests of members:
+- Excess in pool Coverage (reimbursement through the re-insurer / with sharing part of premium/contribution)
+- Eligibility for the claims requests of members:
     - Mainly, building a consensys voting mechansim, where the pool members vote to reimburse a teammate
     - Offchain integration with trusted external data sources
     - Connecting to offchain/onchain oracles, such as delayed flights,etc.
-3- Offchain Checks / Validation such as pool terms and conditions, pool coverage, max number of members, etc.
-4- Partial reimbursement if the avialable fund is not enought for the whole requested claim
-5- Partial reimbursement if the claim has exceeded the maxCoveragePerMember
+- Offchain Checks / Validation such as pool terms and conditions, pool coverage, max number of members, etc.
+- Partial reimbursement if the avialable fund is not enought for the whole requested claim
+- Partial reimbursement if the claim has exceeded the maxCoveragePerMember
