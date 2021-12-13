@@ -1,10 +1,14 @@
-/*
 
+// @title Testing P2P insurance contract
+// @author Houmam Homsi
+/* @notice
 This test file has been updated for Truffle version 5.0. If your tests are failing, make sure that you are
 using Truffle version 5.0. You can check this by running "trufffle version"  in the terminal. If version 5 is not
 installed, you can uninstall the existing version with `npm uninstall -g truffle` and install the latest version (5.0)
 with `npm install -g truffle`.
-
+*/
+/* @notice Testing the main activities:
+      Creating pools, joining to a pool, pool activation, requesting a claim , and finish pool/withraw balance
 */
 
 const P2P_Insurance = artifacts.require("./P2P_Insurance.sol");
@@ -13,7 +17,8 @@ const InsurancePool = artifacts.require("./InsurancePool.sol");
 contract("P2P_Insurance", function ( accounts ) {
 
   const [poolManager, member1, member2] = accounts;
-  const pool = [3, web3.utils.toWei("0.0015" , 'ether'), web3.utils.toWei("0.0030" , 'ether')]; // number of members, premium, max coverage per member
+  // number of members, premium, max coverage per member
+  const pool = [3, web3.utils.toWei("0.0015" , 'ether'), web3.utils.toWei("0.0030" , 'ether')]; 
 
   const getErrorObj = (obj = {}) => {
     const txHash = Object.keys(obj)[0];
@@ -123,13 +128,3 @@ contract("P2P_Insurance", function ( accounts ) {
   });
 
 });
-
-/*
-await p2pInstance.createNewPool (pool[0], pool[1], pool[2],{ from: poolManager, value: pool[1] }); 
-const poolCount = await p2pInstance.poolCount.call()
-const pools = await p2pInstance.getPools.call();
-const newPool = await pools.at(poolCount - 1 );
-let poolInstance = await InsurancePool.at(newPool);
-const premium = await poolInstance.premium.call();
-...
-*/

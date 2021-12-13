@@ -3,12 +3,11 @@ pragma solidity 0.8.10;
 
 import "./InsurancePool.sol";
 
-/** 
- - Implements p2p insurance through creating insurance pools
- - I am using the factory design pattern: P2P_Insurance (the factory) that creates objects/smart contracts (InsurancePool)
- - Using wei as the payment unit (eth unit at the frontend level)
- */
-
+// @title P2P insurance through creating insurance pools
+// @author Houmam Homsi
+// @notice using the factory design pattern: P2P_Insurance (the factory) that creates objects/smart contracts(InsurancePool)
+// @dev Using wei as the payment unit (eth unit at the frontend level)
+// @custom: This is an MVP contract.
 contract P2P_Insurance {
     
     address public immutable owner; //owner = platform

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.10;
 
-//Member interface to be inherited by the Insurance Pool contract
+//@title PoolMember interface to be inherited by the Insurance Pool contract
 interface PoolMember {
     struct Member 
     {

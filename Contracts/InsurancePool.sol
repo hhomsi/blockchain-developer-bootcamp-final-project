@@ -3,6 +3,18 @@ pragma solidity 0.8.10;
 
 import "./PoolMember.sol";
 
+// @title Insurance Pool - the escrew account is the pool contract address
+// @author Houmam Homsi
+/* @notice Later, There will be other attributes offchain/frontend such as pool terms and conditions, pool coverage, max number of members, etc.
+        Max number of members could be important for Block Gas Limit DoS - to limit members array size
+*/
+/* @notice Later, we can add Re-Insurer capability - when we manage the re-insurance process:
+        the pool members get themselves covered with the help of reinsurance in case of exceeding pool coverage.
+        And of course, some part of premium/contribution is shared with reinsurers 
+*/
+// @dev Using wei as the payment unit (eth unit at the frontend level)
+// @custom: This is an MVP contract.
+
 contract InsurancePool is PoolMember{
 
     bool locked; // used for reentrancy checks
@@ -12,16 +24,6 @@ contract InsurancePool is PoolMember{
     uint public maxCoveragePerMember; // the maximum coverage by a pool to a member - in Wei
     PoolStatus public status; //the pool status
     uint public policyStartDate; // the policy start date / activation date (policy validity is one year by default)
-
-    /* There will be other attributes offchain/frontend such as pool terms and conditions, pool coverage, max number of members, etc.
-       Max number of members - could be important for Block Gas Limit DoS - to limit members array size */
-
-    /* ReInsurer reInsurer; we can add the ReInsurer contract - in future - when we manage the re-insurance process:
-       the pool members get themselves covered with the help of reinsurance in case of exceeding pool coverage.
-       And of course, some part of premium/contribution is shared with reinsurers */
-
-    // Escrew account is the pool contract address: address (this);
-    //(address) this.balance has the pool balance
 
     enum PoolStatus {
         Initiated,
@@ -56,14 +58,6 @@ contract InsurancePool is PoolMember{
         _;
     }
     
-    // not useful - because we always need to return the member id and modifier doesn't return values
-    /*modifier onlyPoolMember (address _sender)
-    {
-        int poolMemberId = getMemberId(_sender);
-        require (poolMemberId >= 0,"It is not a pool member");
-        _;
-    } */
-
     // to check if there is available fund to process the member claim
     modifier availableFundInPool (uint _value) {
         require (getPoolAvailableBalance() >= _value,"The pool has no enough fund ");
@@ -280,8 +274,8 @@ contract InsurancePool is PoolMember{
     fallback() external  {
         emit fallbackReceived(msg.sender,"P2P_Insurance Fallback was called");
     }
-    
-    /*
+
+    /* @notice
         //clean up the canceled pool (for Gaz Optimization / return gaz) ?
         //because the policy is not activated and no important transactions to keep stored on blockchain
         //We can destruct the pool, and have the archive of canceled pools offchain if needed

@@ -19,7 +19,8 @@ https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 - Solidity compiler is 0.8.10+commit (used specific pragma solidity 0.8.10)
 - Node >= v15.0
 - npm
-- Truffle and Ganache-Cli
+- Truffle: npm install -g truffle
+- Ganache-Cli: npm install -g ganache-cli
 
 ## Cloning the project repo:
 
@@ -37,9 +38,10 @@ In your terminal, open a new project folder and run:
 
 - The MetaMask Extension is installed
 - Using eth as the payment unit in fronend transactions
+- Using Rinkeby testnet / accounts with ether funds
 - To get free test ether on rinkeby: https://www.rinkeby.io/#faucet
-
-
+- Run the frontend from the deployed version url: https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
+  *You might run it locally by open index.html with live server (Install Live Server Extension in vs code)*
 
 # Screencast link
 

@@ -532,6 +532,8 @@ async function getPoolsAndMembersDetails ()
     const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
     const isMemberJoined = (memberDetails[0] != -1) ? true : false;
     pools[i] = poolDetails;
+    console.log(pools[i])
+
     pools[i][9] = isMemberJoined;
 
     if (isMemberJoined)
