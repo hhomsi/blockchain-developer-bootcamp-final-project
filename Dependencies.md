@@ -1,6 +1,6 @@
 compiler is 0.8.10+commit
 
-truggle-config .js  //no need
+truffle-config .js  //no need
 // Configure your compilers
   compilers: {
     solc: {
@@ -14,7 +14,7 @@ pre-requisits:
 The MetaMask Extension downloaded.
 Node.js Downloaded and Installed
 npm install
-npm i metamask-onboarding
+npm install @metamask-onboarding
 
 -in Migration Folder, add a new file: 2_deploy_contracts.js // no need
 var <x> = artifacts.require(".<contract_name>.sol");
@@ -61,5 +61,25 @@ migrate and testing locally:
     truffle console --network rinkeby
     truffle(rinkeby)> let contract = await P2P_Insurance.deployed()
     contract.address
+
+
+//ordering the modifiers logically in functions
+//re-name modifier require message in more unstandable way
+//Listening for events and updating user interface
+//proxy upgrade pattern?
+
+
+-- Are commented to the specs described by NatSpec Solidity documentation
+-- Contain smart contract(s) which: --Can be easily compiled, migrated and tested? YES/NO
+
+-- Have clear instructions for: 
+1) Installing dependencies for your project 
+2) Accessing orâ€”if your project needs a server (not required)â€”running your project
+3) Running your smart contract unit tests and which port a local testnet should be running on. YES/NO
+
+-- Screencast
+
+
+
 
 

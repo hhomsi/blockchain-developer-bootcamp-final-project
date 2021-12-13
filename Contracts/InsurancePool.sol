@@ -11,17 +11,17 @@ contract InsurancePool is PoolMember{
     uint public premium; // the pool premium in Wei
     uint public maxCoveragePerMember; // the maximum coverage by a pool to a member - in Wei
     PoolStatus public status; //the pool status
-    uint public policyStartDate; // the policy start date since activation - policy validity is one year by defualt
+    uint public policyStartDate; // the policy start date / activation date (policy validity is one year by default)
 
-    /* there will be other attributes offchain/frontend such as pool terms and conditions, pool coverage, max number of members, etc.
-       max number of members - could be important for Block Gas Limit DoS - to limit members array size */
+    /* There will be other attributes offchain/frontend such as pool terms and conditions, pool coverage, max number of members, etc.
+       Max number of members - could be important for Block Gas Limit DoS - to limit members array size */
 
     /* ReInsurer reInsurer; we can add the ReInsurer contract - in future - when we manage the re-insurance process:
        the pool members get themselves covered with the help of reinsurance in case of exceeding pool coverage.
        And of course, some part of premium/contribution is shared with reinsurers */
 
     // Escrew account is the pool contract address: address (this);
-    //(address) this.balance has the pool avialable fund
+    //(address) this.balance has the pool balance
 
     enum PoolStatus {
         Initiated,
@@ -70,7 +70,7 @@ contract InsurancePool is PoolMember{
         _;
     }
 
-   // protect agianst reentrant calls 
+   // protect against reentrant calls 
    modifier noReentrancy() 
     { 
         require( !locked, "Reentrant call." );
@@ -82,7 +82,7 @@ contract InsurancePool is PoolMember{
     //Register Events
     event fallbackReceived(address sender, string message);
 
-    //return the current fund at the pool
+    //return the current balance at the pool
     function getPoolTotalBalance() public view returns (uint)
     {
         return address (this).balance; 
@@ -93,7 +93,7 @@ contract InsurancePool is PoolMember{
         return address (this); 
     }
 
-    //return the available balance in pool after deducting the members balances that are due and not withdrawed yet. 
+    //return the available fund in pool after deducting the members balances (that are due and not withdrawed yet) 
     function getPoolAvailableBalance() public view returns (uint)
     {
         uint sumBalances = 0; // sum the balances of members that are due and not withdrawed yet. 
@@ -143,7 +143,7 @@ contract InsurancePool is PoolMember{
          }
     }
 
-    //already checked if enough premium paid before creating the InsurancePool instance
+    //already checked (at factory contract) if enough premium paid before creating the InsurancePool instance
     function createPool(address _memberAddress, uint _minNumberOfMembers, uint _premium, uint _maxCoveragePerMember) external payable override returns (bool)
     {
         minNumberOfMembers = _minNumberOfMembers;  // 
@@ -162,7 +162,7 @@ contract InsurancePool is PoolMember{
         return true;
     }
 
-    //already checked if enough premium paid before calling the function
+    //already checked (at factory contract) if enough premium paid before calling this function
     function joinPool(address _memberAddress) external payable override returns (bool isJoined,bool isPoolActivated)
     {
         require (getMemberIndex(_memberAddress) == -1,"Member already joined this pool");
@@ -194,7 +194,7 @@ contract InsurancePool is PoolMember{
         return true;
     }
 
-    // cancel membership of a pool member befor the pool activation
+    // cancel membership of a pool member if only the pool is not activated yet
     function cancelSubscription (address _memberAddress) external override onlyInitiatedPool() noReentrancy returns (bool)
     {
         // Checks-effects-interactions pattern:
@@ -245,12 +245,6 @@ contract InsurancePool is PoolMember{
         member.totalClaims += _claimAmount; // before the actual transfer (Checks-effects-interactions pattern)
         member.memberAddress.transfer(_claimAmount);
         return true;
-
-        /* Future use cases (not in this project scope):
-                1- partial reimbursement if the avialable fund is not enought for the requested claim
-                2- partial reimbursement if the claim has exceeded the maxCoveragePerMember
-                3- if pool ran out of fund, reimbursement through the re-insurer
-        */
     } 
 
     // this function will refund the member any extra amount (when deposit the premium), cancelation cases or when distributing the surplus at policy expiry
@@ -282,35 +276,19 @@ contract InsurancePool is PoolMember{
     
     /* implementing PoolMember Interface Functions has been Completed */
 
-    
-    //clean up the canceled pool? I think Yes for (Gaz Optimization /return gaz),
-    //because the policy is not activated and no important transactions to keep stored on blockchain
-    //We can have the archive of canceled pools offchain if needed
-    
-    /*function selfDestructPool() private onlycanceledPool 
-    {
-        assert(getPoolTotalBalance() == 0); // the pool fund should be already empty
-        selfdestruct(payable(msg.sender)); // we are sure that there is no remaining Ether before the self destruction
-    }*/
-
-    //fall back function 
-    //it is not payable - not accepting to receive plain ether and this will raise exception!
+    //fall back function  is not payable - not accepting to receive plain ether and this will raise exception!
     fallback() external  {
         emit fallbackReceived(msg.sender,"P2P_Insurance Fallback was called");
     }
+    
+    /*
+        //clean up the canceled pool (for Gaz Optimization / return gaz) ?
+        //because the policy is not activated and no important transactions to keep stored on blockchain
+        //We can destruct the pool, and have the archive of canceled pools offchain if needed
+        function selfDestructPool() private onlycanceledPool 
+        {
+            assert(getPoolTotalBalance() == 0); // the pool fund should be already empty
+            selfdestruct(payable(msg.sender)); // we are sure that there is no remaining Ether before the self destruction
+        }
+    */
 }
-
-//ordering the modifiers logically in functions
-//re-name modifier require message in more unstandable way
-//Listening for events and updating user interface
-// policy start end end date - finish pool?
-//try to create Library for Refund - independent deployment
-
-//proxy upgrade pattern?
-//Checks-effects-interactions pattern
-//withdrwal pattern
-//factory pattern
-//circuit breaker pttern
-
-//re-entrancy
-//Inter-Contract Execution (Calling functions in external contracts) Inter-Contract Execution, Part 1 and Part 2
