@@ -10,10 +10,13 @@ pre-requisits:
 - npm install @truffle/hdwallet-provider
 - npm install dotenv
 - register for a free account on Infura, and creat a new project
-- (installing truffle, node , npm, ...)
+- (installing truffle, ganache-cli, node , npm, ...)
 The MetaMask Extension downloaded.
 Node.js Downloaded and Installed
 npm install
+truffle
+
+web3.js
 npm install @metamask-onboarding
 
 -in Migration Folder, add a new file: 2_deploy_contracts.js // no need

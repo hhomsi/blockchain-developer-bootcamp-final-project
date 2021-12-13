@@ -15,15 +15,35 @@ https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 # How to run this project locally:
 
 ## Prerequisites
+
 - Solidity compiler is 0.8.10+commit (used specific pragma solidity 0.8.10)
 - Node >= v15.0
 - npm
-- Using eth as the payment unit in fronend transactions
+- Truffle and Ganache-Cli
+
+## Cloning the project repo:
+In your terminal, open a new folder and run:
+  git clone https://github.com/hhomsi/blockchain-developer-bootcamp-final-project.git
+
+
+- @truffle/hdwallet-provider
+- dotenv
 
 
 ## Contracts
 
+1- Run npm install in project root to install Truffle build and smart contract dependencies
+2- In your terminal/project root, run local testnet in port 8545 with: Ganache-Cli (and keep it open!)
+3- Open a new terminal, run: truffle migrate --network development
+4- Run: truffle test --network development
+
+
 ## Frontend
+
+- The MetaMask Extension is installed
+- Using eth as the payment unit in fronend transactions
+- To get free test ether on rinkeby: https://www.rinkeby.io/#faucet
+
 
 
 # Screencast link
