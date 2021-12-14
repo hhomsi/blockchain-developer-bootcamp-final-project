@@ -1,5 +1,5 @@
 // contract address on Rinkeby:
-const ppAddress = '0xa53C3219b80F90C9294BDA42C191fE530b369CE7'
+const ppAddress = '0x95439a4119c8BeAA7FCf5E67B5448cCCf4c19931'
 
 // add contract ABI from Remix:
 const ppABI =  [
@@ -194,7 +194,8 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -207,7 +208,8 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -220,7 +222,8 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -279,7 +282,8 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -318,7 +322,8 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -341,7 +346,8 @@ const ppABI =  [
     "name": "createNewPool",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
@@ -354,7 +360,8 @@ const ppABI =  [
     "name": "joinPool",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
