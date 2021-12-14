@@ -24,7 +24,7 @@ function addPoolRow(poolId, poolAddress, minNumberOfMembers, premium, maxCoverag
 
 }
 
-function addMemberRow(poolId, memberId, balance, totalClaims, remainingCoverage )
+function addMemberRow(memberId, balance, totalClaims, remainingCoverage, poolId )
 
 { 
     var table = document.getElementById("memberPools");

@@ -535,6 +535,7 @@ async function getPoolsAndMembersDetails ()
     if (isMemberJoined)
       {
         members[j] = memberDetails;
+        members[j][4] = i; //pool id
         j++;
       }
   }
@@ -542,8 +543,8 @@ async function getPoolsAndMembersDetails ()
   for (let i=0; i < pools.length; i++)
     addPoolRow(i, pools[i][0], pools[i][1], pools[i][2], pools[i][3], pools[i][4], pools[i][5], pools[i][6], pools[i][7], pools[i][8], ! pools[i][9])
   //display member details to the html
-  for (let i=0; i < members.length; i++)
-    addMemberRow(i, members[i][0], members[i][1], members[i][2], members[i][3] )
+  for (let j=0; j < members.length; j++)
+    addMemberRow(members[j][0], members[j][1], members[j][2], members[j][3], members[j][4] )
 
   document.getElementById('loader').style.display = "none";
 }

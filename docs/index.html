@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Simple Dapp</title>
+  <title>P2P Insurance Dapp</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="./dist/metamask-onboarding.bundle.js"></script>
 
@@ -36,10 +36,10 @@
 
 <body>
   <h1>P2P Insurance Dapp</h1>
-  <p>
-    One-Stop-Shop to join an exiting insurance pool, or create your own pool!
-  </p>
-  <div id="mm-detected"></div>
+  <h2>
+    One-Stop-Shop to join an existing insurance pool, or create your own pool!
+  </h2>
+  <div id="mm-detected" style="margin:5px"></div>
 
   <!-- Connect to MetaMask Wallet -->
 
@@ -56,12 +56,10 @@
   &nbsp;<br/>
 
   <div>
-
   <input id="pp-pool-numOfMemebers" type="number" placeholder="Min Number of Members"/>  
   <input id="pp-pool-premium" type="number" placeholder="Pool Premium"/>  
   <input id="pp-pool-maxCoveragePerMember" type="number" placeholder="Max Coverage/Member"/>  
   <button id="create-pool-button">Create Pool</button>
-
   </div>
 
   &nbsp;<br/>
@@ -69,13 +67,10 @@
   <!-- Read input from contract -->
 
   <div>
-    &nbsp;<br/>
-
-    <button id="pp-get-value">Refresh Pools</button>
+    <button id="pp-get-value" style="margin:5px">Refresh Pools</button>
   </div>
 
   <div id="pools">
-    <b>Current Pools ...</b>
     <table id="poolsList"  border="1" cellpadding="2">
         <tr>
             <td><b>Pool Id</b></td>
@@ -97,8 +92,8 @@
 
   &nbsp;<br/>
 
-  <div id="member">
-    <b>Member joined to these Pools ...</b>
+  <div id="member" >
+    <b>Member joined to these Pools:</b>
     <table id="memberPools"  border="1" cellpadding="2">
         <tr>
             <td><b>Pool Id</b></td>
