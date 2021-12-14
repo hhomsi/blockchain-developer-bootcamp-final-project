@@ -4,11 +4,11 @@
 
 Peer-to-peer (P2P) insurance platform
 
-# Project Desciption: 
+# Project Desciption
 
 Building a Peer-to-peer (P2P) insurance platform that allows a group of insureds to pool their capital, self-organize, and self-administer their own insurance. The core idea of P2P is that a set of like-minded people with mutual interests group their insurance policies together introducing a sense of control, trust, and transparency while at the same time reducing costs. This model of insurance combines traditional pooling and sharing of losses in a decentralized way, providing a product for increasingly savvy consumers who require transparency in an on-demand economy. 
 
-# Deployed version url:
+# Deployed version url
 
 https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 
@@ -22,7 +22,7 @@ https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 - Truffle: npm install -g truffle
 - Ganache-Cli: npm install -g ganache-cli
 
-## Cloning the project repo:
+## Cloning the project repo
 
 First, in your terminal, open a new project folder and run:
   git clone https://github.com/hhomsi/blockchain-developer-bootcamp-final-project.git
@@ -46,7 +46,9 @@ First, in your terminal, open a new project folder and run:
 
 # Screencast link
 
-# Public Ethereum wallet for certification:
+https://www.loom.com/share/ae6d264d5364482a9483af6ad465157d
+
+# Public Ethereum wallet for certification
 
 0xC63c10e691a8Fb1B277c9A6d6a42Ad662646FFAB
 
