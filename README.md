@@ -24,7 +24,7 @@ https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
 
 ## Cloning the project repo:
 
-In your terminal, open a new project folder and run:
+First, in your terminal, open a new project folder and run:
   git clone https://github.com/hhomsi/blockchain-developer-bootcamp-final-project.git
 
 ## Contracts
@@ -38,10 +38,11 @@ In your terminal, open a new project folder and run:
 
 - The MetaMask Extension is installed
 - Using eth as the payment unit in fronend transactions
-- Using Rinkeby testnet / accounts with ether funds
+- Using Rinkeby testnet / with pre-funded accounts
 - To get free test ether on rinkeby: https://www.rinkeby.io/#faucet
-- Run the frontend from the deployed version url: https://hhomsi.github.io/blockchain-developer-bootcamp-final-project/
-  *You might run it locally by open index.html with live server (Install Live Server Extension in vs code)*
+
+- Inside folder docs > open terminal > run: node UIServer.js
+- Then, you can access http://localhost:3000/ to view the frontend locally
 
 # Screencast link
 

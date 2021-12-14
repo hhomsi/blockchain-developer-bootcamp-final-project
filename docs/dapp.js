@@ -194,8 +194,7 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [],
@@ -208,8 +207,7 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [],
@@ -222,8 +220,7 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -267,6 +264,11 @@ const ppABI =  [
       },
       {
         "internalType": "uint256",
+        "name": "_poolBalance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_poolFund",
         "type": "uint256"
       },
@@ -277,8 +279,7 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -317,8 +318,7 @@ const ppABI =  [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -341,8 +341,7 @@ const ppABI =  [
     "name": "createNewPool",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -355,8 +354,7 @@ const ppABI =  [
     "name": "joinPool",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -532,8 +530,6 @@ async function getPoolsAndMembersDetails ()
     const memberDetails = await P2P_Insurance.methods.getMemberDetails(i , ethereum.selectedAddress).call()
     const isMemberJoined = (memberDetails[0] != -1) ? true : false;
     pools[i] = poolDetails;
-    console.log(pools[i])
-
     pools[i][9] = isMemberJoined;
 
     if (isMemberJoined)
